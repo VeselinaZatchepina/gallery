@@ -22,10 +22,14 @@ class AllPhotosViewModel : ViewModel() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ photos ->
-            Log.d("PHOTOS", "${photos.photos.photos.size}")
-        }, { error ->
-            Log.d("PHOTOS_ERROR", "${error.printStackTrace()}")
-        }))
+                    Log.d("PHOTOS", "${photos.photosInfo.photos.size}")
+                }, { error ->
+                    Log.d("PHOTOS_ERROR", "${error.printStackTrace()}")
+                }))
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
+    }
 }
