@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@android:color/white</color>
+    <color name="colorPrimaryDark">@android:color/transparent</color>
+    <color name="colorAccent">#01e2c4</color>
+
+    <!-- gradient colors -->
+    <color name="gradient_start">#ff0073</color>
+    <color name="gradient_center">#154a4e</color>
+    <color name="gradient_end">#154a4e</color>
+
 </resources>

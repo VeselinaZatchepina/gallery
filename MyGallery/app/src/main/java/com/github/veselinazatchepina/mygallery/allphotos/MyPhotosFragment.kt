@@ -9,15 +9,15 @@ import android.view.ViewGroup
 import com.github.veselinazatchepina.mygallery.R
 
 
-class AllPhotosFragment : Fragment() {
+class MyPhotosFragment : Fragment() {
 
     private val allPhotosViewModel by lazy {
         ViewModelProviders.of(this).get(AllPhotosViewModel::class.java)
     }
 
     companion object {
-        fun createInstance(): AllPhotosFragment {
-            return AllPhotosFragment()
+        fun createInstance(): MyPhotosFragment {
+            return MyPhotosFragment()
         }
     }
 

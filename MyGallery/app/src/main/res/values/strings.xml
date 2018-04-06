@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">MyGallery</string>
+    <string name="current_photo_description">Current Photo</string>
+
+    <!-- AllPhotosMainActivity -->
+    <string name="tab_title_all_photos">All photos</string>
+    <string name="tab_title_my_photos">My photos</string>
+
+    <!-- empty view -->
+    <string name="empty_view_text">You don\'t have photos.\n Please save it from previous section</string>
+
+    <!-- error_view -->
+    <string name="error_view_text">Oops… something went wrong</string>
+
 </resources>
