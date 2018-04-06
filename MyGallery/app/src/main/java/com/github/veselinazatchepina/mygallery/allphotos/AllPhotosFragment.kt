@@ -26,6 +26,7 @@ class AllPhotosFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        allPhotosViewModel.getAllPhotos()
         return inflater.inflate(R.layout.recycler_view, container, false)
     }
 
