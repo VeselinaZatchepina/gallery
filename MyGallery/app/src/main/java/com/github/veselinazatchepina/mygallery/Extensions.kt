@@ -2,15 +2,12 @@ package com.github.veselinazatchepina.mygallery
 
 import android.content.Context
 import android.support.annotation.LayoutRes
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
 import java.util.regex.Pattern
 
 //TODO set title
@@ -49,21 +46,4 @@ private fun getIndex(patternString: String, text: String): Int {
 
 infix fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
-}
-
-fun <ITEM> RecyclerView.setUp(items: List<ITEM>,
-                              layoutResId: Int,
-                              emptyLayoutResId: Int,
-                              bindHolder: View.(ITEM) -> Unit,
-                              itemClick: ITEM.() -> Unit = {},
-                              manager: RecyclerView.LayoutManager = LinearLayoutManager(this.context))
-        : AdapterImpl<ITEM> {
-    return AdapterImpl(items, layoutResId, emptyLayoutResId, {
-        bindHolder(it)
-    }, {
-        itemClick()
-    }).apply {
-        layoutManager = manager
-        adapter = this
-    }
 }

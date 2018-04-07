@@ -24,8 +24,8 @@ class AllPhotosViewModel : ViewModel() {
 
     var livePhotos = MutableLiveData<RecentPhotos>()
 
-    fun getAllPhotos() {
-        compositeDisposable.add(galleryDataSource.getAllPhotos()
+    fun getAllPhotos(page: Int = 1) {
+        compositeDisposable.add(galleryDataSource.getAllPhotos(page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ recentPhotos ->

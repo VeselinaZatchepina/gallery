@@ -5,19 +5,17 @@ import android.view.View
 
 class AdapterImpl<ITEM>(items: List<ITEM>,
                         layoutResId: Int,
-                        emptyLayoutResId: Int,
                         private val bindHolder: View.(ITEM) -> Unit
-) : AbstractAdapter<ITEM>(items, layoutResId, emptyLayoutResId) {
+) : AbstractAdapter<ITEM>(items, layoutResId) {
 
     private var itemClick: ITEM.() -> Unit = {}
     private var longItemClick: ITEM.() -> Unit = {}
 
     constructor(items: List<ITEM>,
                 layoutResId: Int,
-                emptyLayoutResId: Int,
                 bindHolder: View.(ITEM) -> Unit,
                 itemClick: ITEM.() -> Unit = {},
-                longItemClick: ITEM.() -> Unit = {}) : this(items, layoutResId, emptyLayoutResId, bindHolder) {
+                longItemClick: ITEM.() -> Unit = {}) : this(items, layoutResId, bindHolder) {
         this.itemClick = itemClick
         this.longItemClick = longItemClick
     }

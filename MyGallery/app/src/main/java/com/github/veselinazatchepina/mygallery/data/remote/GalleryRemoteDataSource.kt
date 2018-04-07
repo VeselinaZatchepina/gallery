@@ -31,8 +31,8 @@ class GalleryRemoteDataSource private constructor() : GalleryDataSource {
         }
     }
 
-    override fun getAllPhotos(): Flowable<RecentPhotos> {
-        return retrofit.create(FlickrAPI::class.java).getAllPhotos()
+    override fun getAllPhotos(page: Int): Flowable<RecentPhotos> {
+        return retrofit.create(FlickrAPI::class.java).getAllPhotos(page)
     }
 
 

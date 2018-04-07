@@ -17,7 +17,7 @@ class GalleryRepository private constructor(val galleryRemoteDataSource: Gallery
         }
     }
 
-    override fun getAllPhotos(): Flowable<RecentPhotos> {
-        return galleryRemoteDataSource.getAllPhotos()
+    override fun getAllPhotos(page: Int): Flowable<RecentPhotos> {
+        return galleryRemoteDataSource.getAllPhotos(page)
     }
 }

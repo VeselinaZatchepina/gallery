@@ -6,5 +6,5 @@ import io.reactivex.Flowable
 
 interface GalleryDataSource {
 
-    fun getAllPhotos(): Flowable<RecentPhotos>
+    fun getAllPhotos(page: Int): Flowable<RecentPhotos>
 }
