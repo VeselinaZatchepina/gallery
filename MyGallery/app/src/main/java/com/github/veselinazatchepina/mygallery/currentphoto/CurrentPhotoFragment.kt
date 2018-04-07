@@ -3,11 +3,11 @@ package com.github.veselinazatchepina.mygallery.currentphoto
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.veselinazatchepina.mygallery.R
+import kotlinx.android.synthetic.main.error_current_photo.*
 import kotlinx.android.synthetic.main.fragment_current_photo.*
 
 
@@ -44,7 +44,6 @@ class CurrentPhotoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("PHOTO_URL", photoUrl)
-        currentPhotoViewModel.downloadPhoto(photoUrl, currentPhoto)
+        currentPhotoViewModel.downloadPhoto(photoUrl, currentPhoto, errorCurrentPhotoText)
     }
 }

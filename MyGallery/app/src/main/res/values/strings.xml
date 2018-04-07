@@ -11,6 +11,7 @@
 
     <!-- error_view -->
     <string name="error_view_text">Oops… something went wrong.\n Try to refresh</string>
+    <string name="error_current_photo_text">Oops… something went wrong</string>
 
     <string name="all_photo_title">Gallery</string>
     <string name="current_photo_title">Photo</string>
