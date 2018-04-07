@@ -50,6 +50,11 @@ infix fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
 }
 
+/**
+ * Method helps to register adapter data observer for RecyclerView adapter
+ *
+ * @param emptyView it is view which should be visible if adapter is empty
+ */
 fun RecyclerView.Adapter<AbstractAdapter.Holder>.observeData(emptyView: View) {
     this.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
         override fun onChanged() {

@@ -3,7 +3,6 @@ package com.github.veselinazatchepina.mygallery.allphotos
 import EndlessRecyclerViewScrollListener
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -101,7 +100,7 @@ class AllPhotosFragment : Fragment() {
 
     private fun defineRecyclerView() {
         recyclerView.adapter = photosAdapter
-        val layoutManager = GridLayoutManager(activity, getSpanCount())
+        val layoutManager = GridLayoutManager(activity, activity!!.resources.getInteger(R.integer.grid_span_count))
         recyclerView.layoutManager = layoutManager
         defineRecyclerViewScrollListener(layoutManager)
     }
@@ -114,6 +113,4 @@ class AllPhotosFragment : Fragment() {
         }
         recyclerView.addOnScrollListener(recyclerScrollListener)
     }
-
-    private fun getSpanCount() = if (resources.configuration.orientation == ORIENTATION_LANDSCAPE) 3 else 2
 }
