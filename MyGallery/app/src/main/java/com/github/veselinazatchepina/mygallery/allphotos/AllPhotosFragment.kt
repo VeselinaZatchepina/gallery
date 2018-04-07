@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
+import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoActivityArgs
 import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.Photo
 import kotlinx.android.synthetic.main.recycler_view.*
@@ -85,9 +86,10 @@ class AllPhotosFragment : Fragment() {
                 allPhotosViewModel.downloadPhoto(it.url, currentImage)
             }
         }, {
-            toast("Click!")
+            //TODO callback?
+            CurrentPhotoActivityArgs(this.url).launch(activity!!)
         }, {
-            toast("LongClick!")
+            toast("Saved!")
         })
         defineAdapterDataObserver()
         defineRecyclerView()

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="all_photo_title">Галлерея</string>
+    <string name="current_photo_title">Фото</string>
 
     <!-- AllPhotosMainActivity -->
     <string name="tab_title_all_photos">Все фото</string>

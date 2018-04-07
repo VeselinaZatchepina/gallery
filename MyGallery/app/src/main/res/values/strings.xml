@@ -13,5 +13,6 @@
     <string name="error_view_text">Oops… something went wrong.\n Try to refresh</string>
 
     <string name="all_photo_title">Gallery</string>
+    <string name="current_photo_title">Photo</string>
 
 </resources>
