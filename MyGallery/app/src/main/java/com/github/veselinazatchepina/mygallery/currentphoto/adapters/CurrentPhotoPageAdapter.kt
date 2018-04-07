@@ -34,4 +34,14 @@ class CurrentPhotoPageAdapter(private val context: Context,
     override fun destroyItem(container: ViewGroup, position: Int, currentObject: Any) {
         container.removeView(currentObject as LinearLayout)
     }
+
+    fun getCurrentItemPosition(item: String) = when (urls.indexOf(item)) {
+        -1 -> 0
+        else -> urls.indexOf(item)
+    }
+
+    fun addAll(newUrls: List<String>) {
+        (urls as ArrayList<String>).addAll(newUrls)
+        notifyDataSetChanged()
+    }
 }

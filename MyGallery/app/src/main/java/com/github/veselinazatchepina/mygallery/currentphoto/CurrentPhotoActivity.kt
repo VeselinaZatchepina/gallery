@@ -36,7 +36,7 @@ class CurrentPhotoActivity : AppCompatActivity() {
     private fun defineFragment() {
         var currentFragment = supportFragmentManager.findFragmentById(R.id.container)
         if (currentFragment == null) {
-            currentFragment = CurrentPhotoFragment.createInstance(args.photoUrl, args.urls)
+            currentFragment = CurrentPhotoFragment.createInstance(args.photoUrl, args.urls, args.page)
             supportFragmentManager.beginTransaction()
                     .add(R.id.container, currentFragment)
                     .commit()

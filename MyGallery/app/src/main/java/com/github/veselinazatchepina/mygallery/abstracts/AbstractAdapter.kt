@@ -49,6 +49,8 @@ abstract class AbstractAdapter<ITEM> constructor(
 
     }
 
+    fun getAdapterItems() = items
+
     fun update(newItems: List<ITEM>) {
         items = newItems
         notifyDataSetChanged()

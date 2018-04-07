@@ -32,6 +32,7 @@ class AllPhotosFragment : Fragment() {
     }
     private lateinit var photosAdapter: AdapterImpl<Photo>
     private lateinit var recyclerScrollListener: EndlessRecyclerViewScrollListener
+    private var currentPageForDownload = 1
 
     companion object {
         fun createInstance(): AllPhotosFragment {
@@ -88,10 +89,9 @@ class AllPhotosFragment : Fragment() {
             }
         }, {
             //TODO callback?
-            CurrentPhotoActivityArgs(this.url, allPhotosViewModel.livePhotosInfo
-                    .value
-                    ?.photos
-                    ?.map { it.url } as ArrayList<String>).launch(activity!!)
+            CurrentPhotoActivityArgs(this.url, photosAdapter.getAdapterItems()
+                    .map { it.url }
+                    .filter { it.isNotEmpty() } as ArrayList<String>, currentPageForDownload).launch(activity!!)
         }, {
             toast("Saved!")
         })
@@ -114,6 +114,7 @@ class AllPhotosFragment : Fragment() {
     private fun defineRecyclerViewScrollListener(gridlayoutManager: GridLayoutManager) {
         recyclerScrollListener = object : EndlessRecyclerViewScrollListener(gridlayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                currentPageForDownload = page
                 allPhotosViewModel.getAllPhotos(page)
             }
         }

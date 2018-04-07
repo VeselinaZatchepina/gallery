@@ -1,8 +1,11 @@
 package com.github.veselinazatchepina.mygallery.currentphoto.fragments
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewPager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,15 +27,24 @@ class CurrentPhotoFragment : Fragment() {
     private val urls by lazy {
         arguments?.getStringArrayList(URLS_KEY_BUNDLE) ?: emptyList<String>()
     }
+    private val currentPage by lazy {
+        arguments?.getInt(CURRENT_PAGE_KEY_BUNDLE)
+    }
+    private var pageNumberForDownload = currentPage ?: 1
+    private lateinit var viewPagerPhotoAdapter: CurrentPhotoPageAdapter
 
     companion object {
         private const val PHOTO_URL_KEY_BUNDLE = "photo_url_key_bundle"
         private const val URLS_KEY_BUNDLE = "urls_key_bundle"
+        private const val CURRENT_PAGE_KEY_BUNDLE = "current_page_key_bundle"
 
-        fun createInstance(photoUrl: String, urls: ArrayList<String>): CurrentPhotoFragment {
+        fun createInstance(photoUrl: String,
+                           urls: ArrayList<String>,
+                           page: Int): CurrentPhotoFragment {
             val bundle = Bundle()
             bundle.putString(PHOTO_URL_KEY_BUNDLE, photoUrl)
             bundle.putStringArrayList(URLS_KEY_BUNDLE, urls)
+            bundle.putInt(CURRENT_PAGE_KEY_BUNDLE, page)
             val fragment = CurrentPhotoFragment()
             fragment.arguments = bundle
             return fragment
@@ -50,7 +62,36 @@ class CurrentPhotoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewPagerCurrentPhoto.adapter = CurrentPhotoPageAdapter(activity!!, urls, currentPhotoViewModel)
-        viewPagerCurrentPhoto.currentItem = urls.indexOf(photoUrl)
+        defineViewPager()
+    }
+
+    private fun defineViewPager(){
+        viewPagerPhotoAdapter = CurrentPhotoPageAdapter(activity!!, urls, currentPhotoViewModel)
+        viewPagerCurrentPhoto.adapter = viewPagerPhotoAdapter
+        viewPagerCurrentPhoto.currentItem = viewPagerPhotoAdapter.getCurrentItemPosition(photoUrl)
+        defineViewPagerPageListener()
+    }
+
+    private fun defineViewPagerPageListener() {
+        viewPagerCurrentPhoto.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                if (position == urls.size - 1) {
+                    currentPhotoViewModel.getAllPhotos(++pageNumberForDownload)
+                    currentPhotoViewModel.livePhotosInfo.observe(this@CurrentPhotoFragment, Observer {
+                        viewPagerPhotoAdapter.addAll(it?.photos?.map { it.url } ?: emptyList())
+                    })
+                    Log.d("POSITION", "URLS_SIZE")
+                }
+                Log.d("POSITION", "$position")
+            }
+        })
     }
 }
