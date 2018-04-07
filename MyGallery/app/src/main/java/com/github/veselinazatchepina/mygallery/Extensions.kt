@@ -10,16 +10,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.veselinazatchepina.mygallery.abstracts.AbstractAdapter
+import java.util.*
 import java.util.regex.Pattern
 
-//TODO set title
+/**
+ * Method sets color of first vowel char. Color is accent color.
+ */
 fun String.setFirstVowelColor(context: Context): Spannable {
     var newText: Spannable = SpannableString(this)
     if (!this.isEmpty() || this != "") {
         val index = getFirstVowelIndex(this)
         newText = SpannableString(this)
-        newText.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.colorAccent)),
-                index, index + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        if (index != -1) {
+            newText.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.colorAccent)),
+                    index, index + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
         return newText
     }
     return newText
@@ -32,7 +37,11 @@ fun String.setFirstVowelColor(context: Context): Spannable {
  * @return index of first vowel
  */
 private fun getFirstVowelIndex(text: String): Int {
-    val patternString = "(?i:[aeiouy]).*"
+    var patternString = ""
+    when (Locale.getDefault().language) {
+        "en" -> patternString = "(?i:[aeiouy]).*"
+        "ru" -> patternString = "(?i:[аоиеёэыуюя]).*"
+    }
     return getIndex(patternString, text)
 }
 

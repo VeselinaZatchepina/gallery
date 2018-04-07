@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="all_photo_title">Галлерея</string>
+
+    <!-- AllPhotosMainActivity -->
+    <string name="tab_title_all_photos">Все фото</string>
+    <string name="tab_title_my_photos">Мои фото</string>
+
+    <!-- empty view -->
+    <string name="empty_view_text">Здесь пусто.\n Выберите изображения из предыдущей секции</string>
+
+    <!-- error_view -->
+    <string name="error_view_text">Упс… что-то пошло не так.\n Попробуйте обновить страницу</string>
+</resources>
