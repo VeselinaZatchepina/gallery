@@ -5,7 +5,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 
 
 /**
- * This is a general approach in determining the listener's RecyclerView
+ * This is a common approach in determining the ScrollListener's RecyclerView
  *
  * @See <a href="https://github.com/codepath/android_guides/wiki/Endless-Scrolling-with-AdapterViews-and-RecyclerView">
  *     recycler_view_guide</a>

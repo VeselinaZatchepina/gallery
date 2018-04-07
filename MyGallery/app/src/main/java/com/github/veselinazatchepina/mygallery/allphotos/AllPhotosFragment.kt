@@ -3,8 +3,10 @@ package com.github.veselinazatchepina.mygallery.allphotos
 import EndlessRecyclerViewScrollListener
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -26,6 +28,7 @@ class AllPhotosFragment : Fragment() {
         ViewModelProviders.of(this).get(AllPhotosViewModel::class.java)
     }
     private lateinit var photosAdapter: AdapterImpl<Photo>
+    private lateinit var recyclerScrollListener: EndlessRecyclerViewScrollListener
 
     companion object {
         fun createInstance(): AllPhotosFragment {
@@ -46,10 +49,26 @@ class AllPhotosFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createPhotosAdapter()
+        defineSwipeRefreshLayout()
         allPhotosViewModel.livePhotos.observe(this, Observer {
-            photosAdapter.addAll(it?.photosInfo?.photos ?: emptyList())
+            if (swipeRefreshLayout.isRefreshing) {
+                photosAdapter.update(it?.photosInfo?.photos ?: emptyList())
+                swipeRefreshLayout.isRefreshing = false
+            } else {
+                photosAdapter.addAll(it?.photosInfo?.photos ?: emptyList())
+            }
             Log.d("PHOTOS", "${it?.photosInfo?.photos?.size}")
         })
+    }
+
+    private fun defineSwipeRefreshLayout() {
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(activity!!, R.color.gradient_start),
+                ContextCompat.getColor(activity!!, R.color.gradient_end),
+                ContextCompat.getColor(activity!!, R.color.colorAccent))
+        swipeRefreshLayout.setOnRefreshListener {
+            recyclerScrollListener.resetState()
+            allPhotosViewModel.getAllPhotos()
+        }
     }
 
     private fun createPhotosAdapter() {
@@ -68,14 +87,17 @@ class AllPhotosFragment : Fragment() {
 
     private fun defineRecyclerView(recyclerView: RecyclerView) {
         recyclerView.adapter = photosAdapter
-        val layoutManager = GridLayoutManager(activity, 2)
+        val layoutManager = GridLayoutManager(activity, getSpanCount())
+
         recyclerView.layoutManager = layoutManager
 
-        val scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
+        recyclerScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 allPhotosViewModel.getAllPhotos(page)
             }
         }
-        recyclerView.addOnScrollListener(scrollListener)
+        recyclerView.addOnScrollListener(recyclerScrollListener)
     }
+
+    private fun getSpanCount() = if (resources.configuration.orientation == ORIENTATION_LANDSCAPE) 3 else 2
 }
