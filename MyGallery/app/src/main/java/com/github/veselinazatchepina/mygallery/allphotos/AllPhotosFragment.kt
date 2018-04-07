@@ -15,8 +15,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
+import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.Photo
 import kotlinx.android.synthetic.main.recycler_view.*
+import kotlinx.android.synthetic.main.recycler_view_empty.*
 import kotlinx.android.synthetic.main.recycler_view_image_item.view.*
 import org.jetbrains.anko.support.v4.toast
 
@@ -51,24 +53,30 @@ class AllPhotosFragment : Fragment() {
         createPhotosAdapter()
         defineSwipeRefreshLayout()
         allPhotosViewModel.livePhotos.observe(this, Observer {
-            if (swipeRefreshLayout.isRefreshing) {
-                photosAdapter.update(it?.photosInfo?.photos ?: emptyList())
-                swipeRefreshLayout.isRefreshing = false
-            } else {
-                photosAdapter.addAll(it?.photosInfo?.photos ?: emptyList())
+            if (it != null) {
+                if (swipeRefreshLayout.isRefreshing) {
+                    photosAdapter.update(it)
+                    swipeRefreshLayout.isRefreshing = false
+                } else {
+                    photosAdapter.addAll(it)
+                }
+                Log.d("PHOTOS", "${it.size}")
             }
-            Log.d("PHOTOS", "${it?.photosInfo?.photos?.size}")
         })
     }
 
     private fun defineSwipeRefreshLayout() {
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(activity!!, R.color.gradient_start),
-                ContextCompat.getColor(activity!!, R.color.gradient_end),
-                ContextCompat.getColor(activity!!, R.color.colorAccent))
+        setColorsToSwipe()
         swipeRefreshLayout.setOnRefreshListener {
             recyclerScrollListener.resetState()
             allPhotosViewModel.getAllPhotos()
         }
+    }
+
+    private fun setColorsToSwipe() {
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(activity!!, R.color.gradient_start),
+                ContextCompat.getColor(activity!!, R.color.gradient_end),
+                ContextCompat.getColor(activity!!, R.color.colorAccent))
     }
 
     private fun createPhotosAdapter() {
@@ -82,16 +90,24 @@ class AllPhotosFragment : Fragment() {
         }, {
             toast("LongClick!")
         })
-        defineRecyclerView(recyclerView)
+        defineAdapterDataObserver()
+        defineRecyclerView()
     }
 
-    private fun defineRecyclerView(recyclerView: RecyclerView) {
+    private fun defineAdapterDataObserver() {
+        emptyText.text = resources.getString(R.string.error_view_text)
+        photosAdapter.observeData(emptyText)
+    }
+
+    private fun defineRecyclerView() {
         recyclerView.adapter = photosAdapter
         val layoutManager = GridLayoutManager(activity, getSpanCount())
-
         recyclerView.layoutManager = layoutManager
+        defineRecyclerViewScrollListener(layoutManager)
+    }
 
-        recyclerScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
+    private fun defineRecyclerViewScrollListener(gridlayoutManager: GridLayoutManager) {
+        recyclerScrollListener = object : EndlessRecyclerViewScrollListener(gridlayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 allPhotosViewModel.getAllPhotos(page)
             }

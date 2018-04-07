@@ -2,12 +2,14 @@ package com.github.veselinazatchepina.mygallery
 
 import android.content.Context
 import android.support.annotation.LayoutRes
+import android.support.v7.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.github.veselinazatchepina.mygallery.abstracts.AbstractAdapter
 import java.util.regex.Pattern
 
 //TODO set title
@@ -46,4 +48,27 @@ private fun getIndex(patternString: String, text: String): Int {
 
 infix fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
+}
+
+fun RecyclerView.Adapter<AbstractAdapter.Holder>.observeData(emptyView: View) {
+    this.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+        override fun onChanged() {
+            super.onChanged()
+            checkEmpty()
+        }
+
+        override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+            super.onItemRangeRemoved(positionStart, itemCount)
+            checkEmpty()
+        }
+
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            super.onItemRangeInserted(positionStart, itemCount)
+            checkEmpty()
+        }
+
+        fun checkEmpty() {
+            emptyView.visibility = if (itemCount == 0) View.VISIBLE else View.GONE
+        }
+    })
 }

@@ -10,6 +10,6 @@
     <string name="empty_view_text">You don\'t have photos.\n Please save it from previous section</string>
 
     <!-- error_view -->
-    <string name="error_view_text">Oops… something went wrong</string>
+    <string name="error_view_text">Oops… something went wrong.\n Try to refresh</string>
 
 </resources>

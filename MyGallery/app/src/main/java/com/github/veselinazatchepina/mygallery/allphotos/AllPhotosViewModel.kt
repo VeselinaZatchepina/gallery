@@ -7,6 +7,7 @@ import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.data.GalleryRepository
 import com.github.veselinazatchepina.mygallery.data.remote.GalleryRemoteDataSource
+import com.github.veselinazatchepina.mygallery.poko.Photo
 import com.github.veselinazatchepina.mygallery.poko.RecentPhotos
 import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,7 +23,7 @@ class AllPhotosViewModel : ViewModel() {
         GalleryRepository.getInstance(GalleryRemoteDataSource.getInstance())
     }
 
-    var livePhotos = MutableLiveData<RecentPhotos>()
+    var livePhotos = MutableLiveData<List<Photo>>()
 
     fun getAllPhotos(page: Int = 1) {
         compositeDisposable.add(galleryDataSource.getAllPhotos(page)
@@ -30,8 +31,9 @@ class AllPhotosViewModel : ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ recentPhotos ->
                     Log.d("PHOTOS", "OK")
-                    livePhotos.value = recentPhotos
+                    livePhotos.value = recentPhotos.photosInfo.photos
                 }, { error ->
+                    livePhotos.value = RecentPhotos().photosInfo.photos
                     Log.d("PHOTOS_ERROR", "${error.printStackTrace()}")
                 }))
     }
