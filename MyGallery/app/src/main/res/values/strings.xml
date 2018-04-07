@@ -16,4 +16,7 @@
     <string name="all_photo_title">Gallery</string>
     <string name="current_photo_title">Photo</string>
 
+    <!--current_photo menu-->
+    <string name="share_photo">Share</string>
+
 </resources>

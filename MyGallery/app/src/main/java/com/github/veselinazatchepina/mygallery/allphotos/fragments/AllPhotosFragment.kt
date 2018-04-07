@@ -1,4 +1,4 @@
-package com.github.veselinazatchepina.mygallery.allphotos
+package com.github.veselinazatchepina.mygallery.allphotos.fragments
 
 import EndlessRecyclerViewScrollListener
 import android.arch.lifecycle.Observer
@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
+import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
 import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoActivityArgs
 import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.Photo
@@ -87,7 +88,10 @@ class AllPhotosFragment : Fragment() {
             }
         }, {
             //TODO callback?
-            CurrentPhotoActivityArgs(this.url).launch(activity!!)
+            CurrentPhotoActivityArgs(this.url, allPhotosViewModel.livePhotosInfo
+                    .value
+                    ?.photos
+                    ?.map { it.url } as ArrayList<String>).launch(activity!!)
         }, {
             toast("Saved!")
         })

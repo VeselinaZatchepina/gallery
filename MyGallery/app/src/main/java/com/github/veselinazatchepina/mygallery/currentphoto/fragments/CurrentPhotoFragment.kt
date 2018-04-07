@@ -1,4 +1,4 @@
-package com.github.veselinazatchepina.mygallery.currentphoto
+package com.github.veselinazatchepina.mygallery.currentphoto.fragments
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -7,7 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.veselinazatchepina.mygallery.R
-import kotlinx.android.synthetic.main.error_current_photo.*
+import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewModel
+import com.github.veselinazatchepina.mygallery.currentphoto.adapters.CurrentPhotoPageAdapter
 import kotlinx.android.synthetic.main.fragment_current_photo.*
 
 
@@ -20,13 +21,18 @@ class CurrentPhotoFragment : Fragment() {
     private val photoUrl by lazy {
         arguments?.getString(PHOTO_URL_KEY_BUNDLE) ?: ""
     }
+    private val urls by lazy {
+        arguments?.getStringArrayList(URLS_KEY_BUNDLE) ?: emptyList<String>()
+    }
 
     companion object {
         private const val PHOTO_URL_KEY_BUNDLE = "photo_url_key_bundle"
+        private const val URLS_KEY_BUNDLE = "urls_key_bundle"
 
-        fun createInstance(photoUrl: String): CurrentPhotoFragment {
+        fun createInstance(photoUrl: String, urls: ArrayList<String>): CurrentPhotoFragment {
             val bundle = Bundle()
             bundle.putString(PHOTO_URL_KEY_BUNDLE, photoUrl)
+            bundle.putStringArrayList(URLS_KEY_BUNDLE, urls)
             val fragment = CurrentPhotoFragment()
             fragment.arguments = bundle
             return fragment
@@ -44,6 +50,7 @@ class CurrentPhotoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        currentPhotoViewModel.downloadPhoto(photoUrl, currentPhoto, errorCurrentPhotoText)
+        viewPagerCurrentPhoto.adapter = CurrentPhotoPageAdapter(activity!!, urls, currentPhotoViewModel)
+        viewPagerCurrentPhoto.currentItem = urls.indexOf(photoUrl)
     }
 }

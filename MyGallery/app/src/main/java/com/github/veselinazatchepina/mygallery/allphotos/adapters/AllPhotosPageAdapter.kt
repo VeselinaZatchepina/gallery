@@ -1,8 +1,10 @@
-package com.github.veselinazatchepina.mygallery.allphotos
+package com.github.veselinazatchepina.mygallery.allphotos.adapters
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import com.github.veselinazatchepina.mygallery.allphotos.fragments.AllPhotosFragment
+import com.github.veselinazatchepina.mygallery.allphotos.fragments.MyPhotosFragment
 
 
 class AllPhotosPageAdapter(fm: FragmentManager,

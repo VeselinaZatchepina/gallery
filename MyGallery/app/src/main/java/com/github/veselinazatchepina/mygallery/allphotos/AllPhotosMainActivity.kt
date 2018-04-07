@@ -3,6 +3,7 @@ package com.github.veselinazatchepina.mygallery.allphotos
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.github.veselinazatchepina.mygallery.R
+import com.github.veselinazatchepina.mygallery.allphotos.adapters.AllPhotosPageAdapter
 import com.github.veselinazatchepina.mygallery.enums.PhotoType
 import com.github.veselinazatchepina.mygallery.setFirstVowelColor
 import kotlinx.android.synthetic.main.activity_all_photos_main.*

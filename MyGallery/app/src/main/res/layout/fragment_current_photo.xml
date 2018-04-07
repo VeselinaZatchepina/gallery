@@ -4,14 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/currentPhoto"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPagerCurrentPhoto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/current_photo_description">
-    </ImageView>
-
-    <include layout="@layout/error_current_photo"/>
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

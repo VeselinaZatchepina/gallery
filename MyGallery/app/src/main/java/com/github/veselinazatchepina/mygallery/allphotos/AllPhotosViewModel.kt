@@ -8,6 +8,7 @@ import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.data.GalleryRepository
 import com.github.veselinazatchepina.mygallery.data.remote.GalleryRemoteDataSource
 import com.github.veselinazatchepina.mygallery.poko.Photo
+import com.github.veselinazatchepina.mygallery.poko.PhotosInfo
 import com.github.veselinazatchepina.mygallery.poko.RecentPhotos
 import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -24,6 +25,7 @@ class AllPhotosViewModel : ViewModel() {
     }
 
     var livePhotos = MutableLiveData<List<Photo>>()
+    var livePhotosInfo = MutableLiveData<PhotosInfo>()
 
     fun getAllPhotos(page: Int = 1) {
         compositeDisposable.add(galleryDataSource.getAllPhotos(page)
@@ -32,8 +34,10 @@ class AllPhotosViewModel : ViewModel() {
                 .subscribe({ recentPhotos ->
                     Log.d("PHOTOS", "OK")
                     livePhotos.value = recentPhotos.photosInfo.photos
+                    livePhotosInfo.value = recentPhotos.photosInfo
                 }, { error ->
                     livePhotos.value = RecentPhotos().photosInfo.photos
+                    livePhotosInfo.value = RecentPhotos().photosInfo
                     Log.d("PHOTOS_ERROR", "${error.printStackTrace()}")
                 }))
     }
