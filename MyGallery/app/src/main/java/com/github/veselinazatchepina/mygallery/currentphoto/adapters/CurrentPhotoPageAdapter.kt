@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.github.veselinazatchepina.mygallery.R
-import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewModel
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.current_photo_item.view.*
@@ -17,8 +16,7 @@ import java.lang.Exception
 
 
 class CurrentPhotoPageAdapter(private val context: Context,
-                              private val urls: List<String>,
-                              private val currentPhotoViewModel: CurrentPhotoViewModel) : PagerAdapter() {
+                              private val urls: List<String>) : PagerAdapter() {
 
     private val layoutInflater by lazy {
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater

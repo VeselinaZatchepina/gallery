@@ -2,6 +2,9 @@ package com.github.veselinazatchepina.mygallery.currentphoto.fragments
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.graphics.Bitmap
+import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
@@ -10,6 +13,7 @@ import android.view.*
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewModel
 import com.github.veselinazatchepina.mygallery.currentphoto.adapters.CurrentPhotoPageAdapter
+import kotlinx.android.synthetic.main.current_photo_item.*
 import kotlinx.android.synthetic.main.fragment_current_photo.*
 import org.jetbrains.anko.support.v4.toast
 
@@ -73,13 +77,27 @@ class CurrentPhotoFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.menu_item_share -> toast("Share")
-            R.id.menu_item_rotate -> toast("Rotate")
+            R.id.menu_item_rotate -> rotateImage()
         }
         return super.onOptionsItemSelected(item)
     }
 
+    private fun rotateImage() {
+        val currentBitmap = (currentPhoto.drawable as BitmapDrawable).bitmap
+        val matrix = Matrix()
+        matrix.postRotate(90F)
+        val rotatedBitmap = Bitmap.createBitmap(currentBitmap,
+                0,
+                0,
+                currentBitmap.width,
+                currentBitmap.height,
+                matrix,
+                true)
+        currentPhoto.setImageBitmap(rotatedBitmap)
+    }
+
     private fun defineViewPager() {
-        viewPagerPhotoAdapter = CurrentPhotoPageAdapter(activity!!, urls, currentPhotoViewModel)
+        viewPagerPhotoAdapter = CurrentPhotoPageAdapter(activity!!, urls)
         viewPagerCurrentPhoto.adapter = viewPagerPhotoAdapter
         viewPagerCurrentPhoto.currentItem = viewPagerPhotoAdapter.getCurrentItemPosition(photoUrl)
         defineViewPagerPageListener()
