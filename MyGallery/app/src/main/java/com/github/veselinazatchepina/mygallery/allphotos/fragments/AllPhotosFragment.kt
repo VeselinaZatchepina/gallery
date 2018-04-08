@@ -12,16 +12,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
 import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
 import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoActivityArgs
 import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.Photo
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.recycler_view.*
 import kotlinx.android.synthetic.main.recycler_view_empty.*
 import kotlinx.android.synthetic.main.recycler_view_image_item.view.*
 import org.jetbrains.anko.support.v4.toast
+import java.lang.Exception
 
 
 class AllPhotosFragment : Fragment() {
@@ -85,7 +89,7 @@ class AllPhotosFragment : Fragment() {
         photosAdapter = AdapterImpl(arrayListOf<Photo>(),
                 R.layout.recycler_view_image_item, {
             if (it.url.isNotEmpty()) {
-                allPhotosViewModel.downloadPhoto(it.url, currentImage)
+                downloadPhoto(it.url, currentImage)
             }
         }, {
             //TODO callback?
@@ -119,5 +123,21 @@ class AllPhotosFragment : Fragment() {
             }
         }
         recyclerView.addOnScrollListener(recyclerScrollListener)
+    }
+
+    private fun downloadPhoto(url: String, imageView: ImageView) {
+        Picasso.get()
+                .load(url)
+                .placeholder(R.drawable.empty_image)
+                .error(R.drawable.empty_image)
+                .into(imageView, object : Callback {
+                    override fun onSuccess() {
+                        emptyText.visibility = View.GONE
+                    }
+
+                    override fun onError(e: Exception?) {
+                        emptyText.visibility = View.VISIBLE
+                    }
+                })
     }
 }

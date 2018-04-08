@@ -5,11 +5,15 @@ import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewModel
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.current_photo_item.view.*
 import kotlinx.android.synthetic.main.error_current_photo.view.*
+import java.lang.Exception
 
 
 class CurrentPhotoPageAdapter(private val context: Context,
@@ -26,7 +30,7 @@ class CurrentPhotoPageAdapter(private val context: Context,
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val itemView = layoutInflater.inflate(R.layout.current_photo_item, container, false)
-        currentPhotoViewModel.downloadPhoto(urls[position], itemView.currentPhoto, itemView.errorCurrentPhotoText)
+        downloadPhoto(urls[position], itemView.currentPhoto, itemView.errorCurrentPhotoText)
         container.addView(itemView)
         return itemView
     }
@@ -43,5 +47,20 @@ class CurrentPhotoPageAdapter(private val context: Context,
     fun addAll(newUrls: List<String>) {
         (urls as ArrayList<String>).addAll(newUrls)
         notifyDataSetChanged()
+    }
+
+    private fun downloadPhoto(url: String, imageView: ImageView, errorView: View) {
+        Picasso.get()
+                .load(url)
+                .placeholder(R.drawable.empty_image)
+                .into(imageView, object : Callback {
+                    override fun onSuccess() {
+                        errorView.visibility = View.GONE
+                    }
+
+                    override fun onError(e: Exception?) {
+                        errorView.visibility = View.VISIBLE
+                    }
+                })
     }
 }
