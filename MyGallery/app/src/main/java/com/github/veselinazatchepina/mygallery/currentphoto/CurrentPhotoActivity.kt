@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.currentphoto.fragments.CurrentPhotoFragment
 import com.github.veselinazatchepina.mygallery.setFirstVowelColor
-import kotlinx.android.synthetic.main.activity_all_photos_main.*
+import kotlinx.android.synthetic.main.activity_current_photo.*
 
 
 class CurrentPhotoActivity : AppCompatActivity() {
@@ -23,7 +23,7 @@ class CurrentPhotoActivity : AppCompatActivity() {
     }
 
     private fun defineToolbar() {
-        setSupportActionBar(tabToolbar)
+        setSupportActionBar(currentPhotoToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

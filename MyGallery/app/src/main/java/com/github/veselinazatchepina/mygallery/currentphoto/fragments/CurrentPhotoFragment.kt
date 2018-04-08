@@ -6,13 +6,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewModel
 import com.github.veselinazatchepina.mygallery.currentphoto.adapters.CurrentPhotoPageAdapter
 import kotlinx.android.synthetic.main.fragment_current_photo.*
+import org.jetbrains.anko.support.v4.toast
 
 
 class CurrentPhotoFragment : Fragment() {
@@ -57,6 +56,7 @@ class CurrentPhotoFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_current_photo, container, false)
+        setHasOptionsMenu(true)
         return rootView
     }
 
@@ -65,7 +65,20 @@ class CurrentPhotoFragment : Fragment() {
         defineViewPager()
     }
 
-    private fun defineViewPager(){
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.current_photo, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.menu_item_share -> toast("Share")
+            R.id.menu_item_rotate -> toast("Rotate")
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun defineViewPager() {
         viewPagerPhotoAdapter = CurrentPhotoPageAdapter(activity!!, urls, currentPhotoViewModel)
         viewPagerCurrentPhoto.adapter = viewPagerPhotoAdapter
         viewPagerCurrentPhoto.currentItem = viewPagerPhotoAdapter.getCurrentItemPosition(photoUrl)
