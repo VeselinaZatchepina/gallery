@@ -83,17 +83,19 @@ class CurrentPhotoFragment : Fragment() {
     }
 
     private fun rotateImage() {
-        val currentBitmap = (currentPhoto.drawable as BitmapDrawable).bitmap
-        val matrix = Matrix()
-        matrix.postRotate(90F)
-        val rotatedBitmap = Bitmap.createBitmap(currentBitmap,
-                0,
-                0,
-                currentBitmap.width,
-                currentBitmap.height,
-                matrix,
-                true)
-        currentPhoto.setImageBitmap(rotatedBitmap)
+        if (currentPhoto.drawable != null) {
+            val currentBitmap = (currentPhoto.drawable as BitmapDrawable).bitmap
+            val matrix = Matrix()
+            matrix.postRotate(90F)
+            val rotatedBitmap = Bitmap.createBitmap(currentBitmap,
+                    0,
+                    0,
+                    currentBitmap.width,
+                    currentBitmap.height,
+                    matrix,
+                    true)
+            currentPhoto.setImageBitmap(rotatedBitmap)
+        }
     }
 
     private fun defineViewPager() {
