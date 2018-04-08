@@ -2,20 +2,27 @@ package com.github.veselinazatchepina.mygallery.currentphoto.fragments
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.support.v4.app.Fragment
+import android.support.v4.content.FileProvider
 import android.support.v4.view.ViewPager
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewModel
 import com.github.veselinazatchepina.mygallery.currentphoto.adapters.CurrentPhotoPageAdapter
 import kotlinx.android.synthetic.main.current_photo_item.*
 import kotlinx.android.synthetic.main.fragment_current_photo.*
-import org.jetbrains.anko.support.v4.toast
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 class CurrentPhotoFragment : Fragment() {
@@ -76,15 +83,52 @@ class CurrentPhotoFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.menu_item_share -> toast("Share")
+            R.id.menu_item_share -> sharePhoto()
             R.id.menu_item_rotate -> rotateImage()
         }
         return super.onOptionsItemSelected(item)
     }
 
+    private fun sharePhoto() {
+        val currentBitmapUri = getLocalBitmapUri(currentPhoto)
+        if (currentBitmapUri != null) {
+            val shareIntent = Intent()
+            shareIntent.action = Intent.ACTION_SEND
+            shareIntent.putExtra(Intent.EXTRA_STREAM, currentBitmapUri)
+            shareIntent.type = "image/*"
+            startActivity(Intent.createChooser(shareIntent, "Share Image"))
+        }
+    }
+
+    private fun getLocalBitmapUri(imageView: ImageView): Uri? {
+        val currentBitmap = getBitmap(imageView)
+        var currentBitmapUri: Uri? = null
+        try {
+            currentBitmapUri = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                FileProvider.getUriForFile(activity!!,
+                        "com.github.veselinazatchepina.mygallery",
+                        getFileWithBitmap(currentBitmap))
+            } else {
+                Uri.fromFile(getFileWithBitmap(currentBitmap))
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return currentBitmapUri
+    }
+
+    private fun getFileWithBitmap(currentBitmap: Bitmap?): File {
+        val fileForBitmap = File(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                "share_image_" + System.currentTimeMillis() + ".png")
+        val fileOutputStream = FileOutputStream(fileForBitmap)
+        currentBitmap!!.compress(Bitmap.CompressFormat.PNG, 90, fileOutputStream)
+        fileOutputStream.close()
+        return fileForBitmap
+    }
+
     private fun rotateImage() {
-        if (currentPhoto.drawable != null) {
-            val currentBitmap = (currentPhoto.drawable as BitmapDrawable).bitmap
+        val currentBitmap = getBitmap(currentPhoto)
+        if (currentBitmap != null) {
             val matrix = Matrix()
             matrix.postRotate(90F)
             val rotatedBitmap = Bitmap.createBitmap(currentBitmap,
@@ -95,6 +139,16 @@ class CurrentPhotoFragment : Fragment() {
                     matrix,
                     true)
             currentPhoto.setImageBitmap(rotatedBitmap)
+        }
+
+    }
+
+    private fun getBitmap(currentImageView: ImageView): Bitmap? {
+        val currentDrawable = currentImageView.drawable
+        return if (currentDrawable is BitmapDrawable) {
+            currentDrawable.bitmap
+        } else {
+            null
         }
     }
 
