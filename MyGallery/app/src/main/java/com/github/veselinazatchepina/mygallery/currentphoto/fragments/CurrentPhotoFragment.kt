@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
+import com.github.veselinazatchepina.mygallery.allphotos.dialogs.SavePhotoDialog
 import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewModel
 import com.github.veselinazatchepina.mygallery.currentphoto.adapters.CurrentPhotoPageAdapter
 import kotlinx.android.synthetic.main.current_photo_item.*
