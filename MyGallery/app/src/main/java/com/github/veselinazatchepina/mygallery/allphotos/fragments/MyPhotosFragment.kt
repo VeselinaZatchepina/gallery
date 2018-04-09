@@ -1,16 +1,35 @@
 package com.github.veselinazatchepina.mygallery.allphotos.fragments
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.os.Environment
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.GridLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
+import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
 import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
+import com.github.veselinazatchepina.mygallery.observeData
+import com.github.veselinazatchepina.mygallery.poko.MyPhoto
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.recycler_view.*
+import kotlinx.android.synthetic.main.recycler_view_empty.*
+import kotlinx.android.synthetic.main.recycler_view_image_item.view.*
+import org.jetbrains.anko.support.v4.toast
+import java.io.File
+import java.lang.Exception
 
 
 class MyPhotosFragment : Fragment() {
+
+    private lateinit var myPhotosAdapter: AdapterImpl<MyPhoto>
 
     private val allPhotosViewModel by lazy {
         ViewModelProviders.of(this).get(AllPhotosViewModel::class.java)
@@ -32,6 +51,79 @@ class MyPhotosFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        createMyPhotosAdapter()
+        defineSwipeRefreshLayout()
+        allPhotosViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+        allPhotosViewModel.liveMyPhotos.observe(this, Observer {
+            if (it != null) {
+                myPhotosAdapter.update(it)
+                if (swipeRefreshLayout.isRefreshing) {
+                    swipeRefreshLayout.isRefreshing = false
+                }
+            }
+        })
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (this.isVisible) {
+            allPhotosViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+        }
+    }
+
+    private fun defineSwipeRefreshLayout() {
+        setColorsToSwipe()
+        swipeRefreshLayout.setOnRefreshListener {
+            allPhotosViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+        }
+    }
+
+    private fun setColorsToSwipe() {
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(activity!!, R.color.gradient_start),
+                ContextCompat.getColor(activity!!, R.color.gradient_end),
+                ContextCompat.getColor(activity!!, R.color.colorAccent))
+    }
+
+    private fun createMyPhotosAdapter() {
+        myPhotosAdapter = AdapterImpl(arrayListOf<MyPhoto>(),
+                R.layout.recycler_view_image_item, {
+            downloadPhoto(it.path, currentImage)
+            Log.d("CURRENT_PATH", it.path)
+        }, {
+            toast("Big image")
+        }, {
+            toast("Delete image")
+        })
+        defineAdapterDataObserver()
+        defineRecyclerView()
+    }
+
+    private fun downloadPhoto(url: String, imageView: ImageView) {
+        Picasso.get()
+                .load(File(url))
+                .placeholder(R.drawable.empty_image)
+                .error(R.drawable.empty_image)
+                .into(imageView, object : Callback {
+                    override fun onSuccess() {
+                        emptyText.visibility = View.GONE
+                    }
+
+                    override fun onError(e: Exception?) {
+                        emptyText.text = getString(R.string.error_view_text)
+                        emptyText.visibility = View.VISIBLE
+                    }
+                })
+    }
+
+    private fun defineAdapterDataObserver() {
+        emptyText.text = resources.getString(R.string.empty_view_text)
+        myPhotosAdapter.observeData(emptyText)
+    }
+
+    private fun defineRecyclerView() {
+        recyclerView.adapter = myPhotosAdapter
+        val layoutManager = GridLayoutManager(activity, activity!!.resources.getInteger(R.integer.grid_span_count))
+        recyclerView.layoutManager = layoutManager
     }
 
 

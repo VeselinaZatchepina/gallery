@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.util.Log
 import com.github.veselinazatchepina.mygallery.data.GalleryRepository
+import com.github.veselinazatchepina.mygallery.data.local.GalleryLocalDataSource
 import com.github.veselinazatchepina.mygallery.data.remote.GalleryRemoteDataSource
 import com.github.veselinazatchepina.mygallery.poko.PhotosInfo
 import com.github.veselinazatchepina.mygallery.poko.RecentPhotos
@@ -17,7 +18,8 @@ class CurrentPhotoViewModel : ViewModel() {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     private val galleryDataSource by lazy {
-        GalleryRepository.getInstance(GalleryRemoteDataSource.getInstance())
+        GalleryRepository.getInstance(GalleryRemoteDataSource.getInstance(),
+                GalleryLocalDataSource.getInstance())
     }
 
     var livePhotosInfo = MutableLiveData<PhotosInfo>()

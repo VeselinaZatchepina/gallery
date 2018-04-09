@@ -1,11 +1,13 @@
 package com.github.veselinazatchepina.mygallery.data.remote
 
 import com.github.veselinazatchepina.mygallery.data.GalleryDataSource
+import com.github.veselinazatchepina.mygallery.poko.MyPhoto
 import com.github.veselinazatchepina.mygallery.poko.RecentPhotos
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import io.reactivex.Flowable
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 
 
 class GalleryRemoteDataSource private constructor() : GalleryDataSource {
@@ -35,5 +37,7 @@ class GalleryRemoteDataSource private constructor() : GalleryDataSource {
         return retrofit.create(FlickrAPI::class.java).getAllPhotos(page)
     }
 
-
+    override fun getMyPhotos(rootFile: File): List<MyPhoto> {
+        TODO("not implemented")
+    }
 }

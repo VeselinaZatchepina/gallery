@@ -14,7 +14,7 @@ import java.lang.Exception
 
 
 class TargetFile(private val context: Context,
-                 private val imageDir: String) : Target {
+                 private val imageName: String) : Target {
 
     override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
 
@@ -27,7 +27,7 @@ class TargetFile(private val context: Context,
     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
         Thread(Runnable {
             val fileForBitmap = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                    imageDir)
+                    imageName)
             var fileOutputStream: FileOutputStream? = null
             try {
                 fileOutputStream = FileOutputStream(fileForBitmap)
