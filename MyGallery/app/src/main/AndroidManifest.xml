@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".currentphoto.CurrentPhotoActivity"
-            android:theme="@style/CurrentPhotoStyle"/>
+            android:theme="@style/CurrentPhotoStyle"
+            android:parentActivityName=".allphotos.AllPhotosMainActivity"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

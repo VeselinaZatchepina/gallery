@@ -130,7 +130,7 @@ class CurrentPhotoFragment : Fragment() {
         val currentBitmap = getBitmap(currentPhoto)
         if (currentBitmap != null) {
             val matrix = Matrix()
-            matrix.postRotate(90F)
+            matrix.postRotate(-90F)
             val rotatedBitmap = Bitmap.createBitmap(currentBitmap,
                     0,
                     0,
