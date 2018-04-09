@@ -17,4 +17,7 @@
     <!-- dialog_save_photo -->
     <string name="dialog_save_photo_title">Сохранить выбранное изображение?</string>
 
+    <!-- dialog_delete_photo -->
+    <string name="dialog_delete_photo_title">Удалить выбранное изображение?</string>
+
 </resources>

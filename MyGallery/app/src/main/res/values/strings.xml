@@ -22,7 +22,9 @@
 
     <!-- dialog_save_photo -->
     <string name="dialog_save_photo_title">Save this photo?</string>
-    <string name="dialog_save_photo_cancel_btn_text">Cancel</string>
-    <string name="dialog_save_photo_save_btn_text">Save</string>
+    <string name="dialog_photo_cancel_btn_text">Cancel</string>
+    <string name="dialog_photo_ok_btn_text">Ok</string>
 
+    <!-- dialog_delete_photo -->
+    <string name="dialog_delete_photo_title">Delete this photo?</string>
 </resources>

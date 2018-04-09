@@ -32,7 +32,7 @@ class AllPhotosFragment : Fragment() {
 
     private var rootView: View? = null
     private val allPhotosViewModel by lazy {
-        ViewModelProviders.of(this).get(AllPhotosViewModel::class.java)
+        ViewModelProviders.of(activity!!).get(AllPhotosViewModel::class.java)
     }
     private lateinit var photosAdapter: AdapterImpl<Photo>
     private lateinit var recyclerScrollListener: EndlessRecyclerViewScrollListener

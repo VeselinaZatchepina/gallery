@@ -44,6 +44,12 @@ class AllPhotosViewModel : ViewModel() {
         liveMyPhotos.value = galleryDataSource.getMyPhotos(rootFile)
     }
 
+    fun deleteMyPhoto(myPhotoPath: String, rootFile: File) {
+        val photoFile = File(myPhotoPath)
+        photoFile.delete()
+        getMyPhotos(rootFile)
+    }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()

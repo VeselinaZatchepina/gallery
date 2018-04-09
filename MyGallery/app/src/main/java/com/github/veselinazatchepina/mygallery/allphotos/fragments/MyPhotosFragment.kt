@@ -15,6 +15,7 @@ import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
 import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
+import com.github.veselinazatchepina.mygallery.allphotos.dialogs.DeletePhotoDialog
 import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.MyPhoto
 import com.squareup.picasso.Callback
@@ -32,10 +33,12 @@ class MyPhotosFragment : Fragment() {
     private lateinit var myPhotosAdapter: AdapterImpl<MyPhoto>
 
     private val allPhotosViewModel by lazy {
-        ViewModelProviders.of(this).get(AllPhotosViewModel::class.java)
+        ViewModelProviders.of(activity!!).get(AllPhotosViewModel::class.java)
     }
 
     companion object {
+        private const val DELETE_PHOTO_DIALOG_TAG = "delete_photo_dialog_key"
+
         fun createInstance(): MyPhotosFragment {
             return MyPhotosFragment()
         }
@@ -55,7 +58,9 @@ class MyPhotosFragment : Fragment() {
         defineSwipeRefreshLayout()
         allPhotosViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
         allPhotosViewModel.liveMyPhotos.observe(this, Observer {
+            Log.d("UPDATE", "update1")
             if (it != null) {
+                Log.d("UPDATE", "update")
                 myPhotosAdapter.update(it)
                 if (swipeRefreshLayout.isRefreshing) {
                     swipeRefreshLayout.isRefreshing = false
@@ -88,11 +93,10 @@ class MyPhotosFragment : Fragment() {
         myPhotosAdapter = AdapterImpl(arrayListOf<MyPhoto>(),
                 R.layout.recycler_view_image_item, {
             downloadPhoto(it.path, currentImage)
-            Log.d("CURRENT_PATH", it.path)
         }, {
             toast("Big image")
         }, {
-            toast("Delete image")
+            DeletePhotoDialog.newInstance(this.path).show(activity!!.supportFragmentManager, DELETE_PHOTO_DIALOG_TAG)
         })
         defineAdapterDataObserver()
         defineRecyclerView()
