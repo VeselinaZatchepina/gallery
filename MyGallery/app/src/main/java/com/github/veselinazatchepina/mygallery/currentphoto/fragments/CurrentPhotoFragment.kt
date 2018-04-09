@@ -21,6 +21,7 @@ import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewMode
 import com.github.veselinazatchepina.mygallery.currentphoto.adapters.CurrentPhotoPageAdapter
 import kotlinx.android.synthetic.main.current_photo_item.*
 import kotlinx.android.synthetic.main.fragment_current_photo.*
+import org.jetbrains.anko.support.v4.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -85,7 +86,6 @@ class CurrentPhotoFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.menu_item_share -> sharePhoto()
-            R.id.menu_item_rotate -> rotateImage()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -135,23 +135,6 @@ class CurrentPhotoFragment : Fragment() {
             }
         }
         return fileForBitmap
-    }
-
-    private fun rotateImage() {
-        val currentBitmap = getBitmap(currentPhoto)
-        if (currentBitmap != null) {
-            val matrix = Matrix()
-            matrix.postRotate(-90F)
-            val rotatedBitmap = Bitmap.createBitmap(currentBitmap,
-                    0,
-                    0,
-                    currentBitmap.width,
-                    currentBitmap.height,
-                    matrix,
-                    true)
-            currentPhoto.setImageBitmap(rotatedBitmap)
-        }
-
     }
 
     private fun getBitmap(currentImageView: ImageView): Bitmap? {
