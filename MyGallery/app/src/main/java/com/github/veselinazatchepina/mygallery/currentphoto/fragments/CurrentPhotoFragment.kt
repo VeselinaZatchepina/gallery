@@ -120,9 +120,19 @@ class CurrentPhotoFragment : Fragment() {
     private fun getFileWithBitmap(currentBitmap: Bitmap?): File {
         val fileForBitmap = File(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                 "share_image_" + System.currentTimeMillis() + ".png")
-        val fileOutputStream = FileOutputStream(fileForBitmap)
-        currentBitmap!!.compress(Bitmap.CompressFormat.PNG, 90, fileOutputStream)
-        fileOutputStream.close()
+        var fileOutputStream: FileOutputStream? = null
+        try {
+            fileOutputStream = FileOutputStream(fileForBitmap)
+            currentBitmap?.compress(Bitmap.CompressFormat.PNG, 90, fileOutputStream)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                fileOutputStream!!.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
         return fileForBitmap
     }
 

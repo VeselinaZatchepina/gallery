@@ -3,6 +3,7 @@ package com.github.veselinazatchepina.mygallery.allphotos.fragments
 import EndlessRecyclerViewScrollListener
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -16,7 +17,7 @@ import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
 import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
-import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoActivityArgs
+import com.github.veselinazatchepina.mygallery.allphotos.dialogs.SavePhotoDialog
 import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.Photo
 import com.squareup.picasso.Callback
@@ -24,7 +25,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.recycler_view.*
 import kotlinx.android.synthetic.main.recycler_view_empty.*
 import kotlinx.android.synthetic.main.recycler_view_image_item.view.*
-import org.jetbrains.anko.support.v4.toast
 import java.lang.Exception
 
 
@@ -37,10 +37,26 @@ class AllPhotosFragment : Fragment() {
     private lateinit var photosAdapter: AdapterImpl<Photo>
     private lateinit var recyclerScrollListener: EndlessRecyclerViewScrollListener
     private var currentPageForDownload = 1
+    var activityCallback: AllPhotosFragment.AllPhotosListener? = null
 
     companion object {
+        private const val SAVE_PHOTO_DIALOG_TAG = "save_photo_dialog_key"
+
         fun createInstance(): AllPhotosFragment {
             return AllPhotosFragment()
+        }
+    }
+
+    interface AllPhotosListener {
+        fun launchCurrentPhotoActivity(url: String, allUrls: List<String>, currentPage: Int)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        try {
+            activityCallback = context as AllPhotosListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException(context?.toString() + " must implement AllPhotosListener")
         }
     }
 
@@ -92,12 +108,11 @@ class AllPhotosFragment : Fragment() {
                 downloadPhoto(it.url, currentImage)
             }
         }, {
-            //TODO callback?
-            CurrentPhotoActivityArgs(this.url, photosAdapter.getAdapterItems()
+            activityCallback?.launchCurrentPhotoActivity(this.url, photosAdapter.getAdapterItems()
                     .map { it.url }
-                    .filter { it.isNotEmpty() } as ArrayList<String>, currentPageForDownload).launch(activity!!)
+                    .filter { it.isNotEmpty() } as ArrayList<String>, currentPageForDownload)
         }, {
-            toast("Saved!")
+            SavePhotoDialog.newInstance(url).show(activity!!.supportFragmentManager, SAVE_PHOTO_DIALOG_TAG)
         })
         defineAdapterDataObserver()
         defineRecyclerView()

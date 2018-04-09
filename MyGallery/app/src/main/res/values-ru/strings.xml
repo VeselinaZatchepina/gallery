@@ -14,4 +14,7 @@
     <!-- error_view -->
     <string name="error_view_text">Упс… что-то пошло не так.\n Попробуйте обновить страницу</string>
 
+    <!-- dialog_save_photo -->
+    <string name="dialog_save_photo_title">Сохранить выбранное изображение?</string>
+
 </resources>

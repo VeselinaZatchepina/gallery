@@ -20,4 +20,9 @@
     <string name="share_photo">Share</string>
     <string name="rotate_photo">Rotate</string>
 
+    <!-- dialog_save_photo -->
+    <string name="dialog_save_photo_title">Save this photo?</string>
+    <string name="dialog_save_photo_cancel_btn_text">Cancel</string>
+    <string name="dialog_save_photo_save_btn_text">Save</string>
+
 </resources>

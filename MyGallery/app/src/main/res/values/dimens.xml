@@ -6,4 +6,9 @@
     <dimen name="empty_view_text_size">16sp</dimen>
 
     <dimen name="current_photo_height">160dp</dimen>
+
+    <!-- dialog_save_photo -->
+    <dimen name="dialog_save_photo_cancel_btn_margin_end">16dp</dimen>
+    <dimen name="dialog_save_photo_linear_padding">16dp</dimen>
+
 </resources>
