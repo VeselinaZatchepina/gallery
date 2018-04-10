@@ -16,6 +16,7 @@ import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
 import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
 import com.github.veselinazatchepina.mygallery.allphotos.dialogs.DeletePhotoDialog
+import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoActivityArgs
 import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.MyPhoto
 import com.squareup.picasso.Callback
@@ -23,7 +24,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.recycler_view.*
 import kotlinx.android.synthetic.main.recycler_view_empty.*
 import kotlinx.android.synthetic.main.recycler_view_image_item.view.*
-import org.jetbrains.anko.support.v4.toast
 import java.io.File
 import java.lang.Exception
 
@@ -94,7 +94,10 @@ class MyPhotosFragment : Fragment() {
                 R.layout.recycler_view_image_item, {
             downloadPhoto(it.path, currentImage)
         }, {
-            toast("Big image")
+            CurrentPhotoActivityArgs(path, allPhotosViewModel.liveMyPhotos
+                    .value
+                    ?.map { it.path } as ArrayList<String>)
+                    .launch(activity!!)
         }, {
             DeletePhotoDialog.newInstance(this.path).show(activity!!.supportFragmentManager, DELETE_PHOTO_DIALOG_TAG)
         })

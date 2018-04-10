@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore.Images.Media.getBitmap
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
 import android.support.v4.view.ViewPager
@@ -40,9 +41,10 @@ class CurrentPhotoFragment : Fragment() {
         arguments?.getStringArrayList(URLS_KEY_BUNDLE) ?: emptyList<String>()
     }
     private val currentPage by lazy {
-        arguments?.getInt(CURRENT_PAGE_KEY_BUNDLE)
+        arguments?.getInt(CURRENT_PAGE_KEY_BUNDLE) ?: -1
     }
-    private var pageNumberForDownload = currentPage ?: 1
+    private var pageNumberForDownload = 1
+    private var isMyPhotos = false
     private lateinit var viewPagerPhotoAdapter: CurrentPhotoPageAdapter
 
     companion object {
@@ -75,7 +77,10 @@ class CurrentPhotoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        pageNumberForDownload = currentPage
+        isMyPhotos = currentPage == -1
         defineViewPager()
+        Log.d("ISMY", "MY $isMyPhotos")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -99,6 +104,7 @@ class CurrentPhotoFragment : Fragment() {
             shareIntent.type = "image/*"
             startActivity(Intent.createChooser(shareIntent, "Share Image"))
         }
+        File(currentBitmapUri?.path).delete()
     }
 
     private fun getLocalBitmapUri(imageView: ImageView): Uri? {
@@ -108,15 +114,18 @@ class CurrentPhotoFragment : Fragment() {
             currentBitmapUri = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 FileProvider.getUriForFile(activity!!,
                         "com.github.veselinazatchepina.mygallery",
-                        getFileWithBitmap(currentBitmap))
+                        getFile(currentBitmap))
             } else {
-                Uri.fromFile(getFileWithBitmap(currentBitmap))
+                Uri.fromFile(getFile(currentBitmap))
             }
         } catch (e: IOException) {
             e.printStackTrace()
         }
         return currentBitmapUri
     }
+
+    private fun getFile(currentBitmap: Bitmap?) = if (isMyPhotos) {File(viewPagerPhotoAdapter.getItem(viewPagerCurrentPhoto.currentItem))}
+    else {getFileWithBitmap(currentBitmap)}
 
     private fun getFileWithBitmap(currentBitmap: Bitmap?): File {
         val fileForBitmap = File(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
@@ -147,7 +156,7 @@ class CurrentPhotoFragment : Fragment() {
     }
 
     private fun defineViewPager() {
-        viewPagerPhotoAdapter = CurrentPhotoPageAdapter(activity!!, urls)
+        viewPagerPhotoAdapter = CurrentPhotoPageAdapter(activity!!, urls, isMyPhotos)
         viewPagerCurrentPhoto.adapter = viewPagerPhotoAdapter
         viewPagerCurrentPhoto.currentItem = viewPagerPhotoAdapter.getCurrentItemPosition(photoUrl)
         defineViewPagerPageListener()
@@ -164,14 +173,16 @@ class CurrentPhotoFragment : Fragment() {
             }
 
             override fun onPageSelected(position: Int) {
-                if (position == urls.size - 1) {
-                    currentPhotoViewModel.getAllPhotos(++pageNumberForDownload)
-                    currentPhotoViewModel.livePhotosInfo.observe(this@CurrentPhotoFragment, Observer {
-                        viewPagerPhotoAdapter.addAll(it?.photos?.map { it.url } ?: emptyList())
-                    })
-                    Log.d("POSITION", "URLS_SIZE")
+                if (!isMyPhotos) {
+                    if (position == urls.size - 1) {
+                        currentPhotoViewModel.getAllPhotos(++pageNumberForDownload)
+                        currentPhotoViewModel.livePhotosInfo.observe(this@CurrentPhotoFragment, Observer {
+                            viewPagerPhotoAdapter.addAll(it?.photos?.map { it.url } ?: emptyList())
+                        })
+                        Log.d("POSITION", "URLS_SIZE")
+                    }
+                    Log.d("POSITION", "$position")
                 }
-                Log.d("POSITION", "$position")
             }
         })
     }

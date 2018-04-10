@@ -7,7 +7,7 @@ import com.github.veselinazatchepina.mygallery.ActivityArgs
 
 data class CurrentPhotoActivityArgs(val photoUrl: String,
                                     val urls: ArrayList<String>,
-                                    val page: Int) : ActivityArgs {
+                                    val page: Int = -1) : ActivityArgs {
 
     companion object {
         private const val PHOTO_URL_KEY_INTENT = "photo_url_key_intent"
@@ -17,7 +17,7 @@ data class CurrentPhotoActivityArgs(val photoUrl: String,
         fun deserializeFrom(intent: Intent): CurrentPhotoActivityArgs {
             return CurrentPhotoActivityArgs(intent.getStringExtra(PHOTO_URL_KEY_INTENT),
                     intent.getStringArrayListExtra(URLS_KEY_INTENT),
-                    intent.getIntExtra(CURRENT_PAGE_KEY_INTENT, 1))
+                    intent.getIntExtra(CURRENT_PAGE_KEY_INTENT, -1))
         }
     }
 
