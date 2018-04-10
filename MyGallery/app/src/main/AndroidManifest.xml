@@ -21,9 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".currentphoto.CurrentPhotoActivity"
-            android:theme="@style/CurrentPhotoStyle"
-            android:parentActivityName=".allphotos.AllPhotosMainActivity"/>
+        <activity
+            android:name=".currentphoto.CurrentPhotoActivity"
+            android:parentActivityName=".allphotos.AllPhotosMainActivity"
+            android:theme="@style/CurrentPhotoStyle"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -32,7 +33,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fileprovider" />
+                android:resource="@xml/fileprovider"/>
         </provider>
     </application>
 
