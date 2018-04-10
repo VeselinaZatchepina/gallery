@@ -16,7 +16,7 @@ import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
 import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
 import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoActivityArgs
-import com.github.veselinazatchepina.mygallery.dialogs.DeletePhotoDialog
+import com.github.veselinazatchepina.mygallery.dialogs.DeletePhotoFromListDialog
 import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.MyPhoto
 import com.squareup.picasso.Callback
@@ -69,6 +69,11 @@ class MyPhotosFragment : Fragment() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        allPhotosViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+    }
+
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (this.isVisible) {
@@ -99,7 +104,7 @@ class MyPhotosFragment : Fragment() {
                     ?.map { it.path } as ArrayList<String>)
                     .launch(activity!!)
         }, {
-            DeletePhotoDialog.newInstance(this.path).show(activity!!.supportFragmentManager, DELETE_PHOTO_DIALOG_TAG)
+            DeletePhotoFromListDialog.newInstance(this.path).show(activity!!.supportFragmentManager, DELETE_PHOTO_DIALOG_TAG)
         })
         defineAdapterDataObserver()
         defineRecyclerView()

@@ -1,5 +1,6 @@
 package com.github.veselinazatchepina.mygallery.currentphoto.adapters
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.support.v4.app.FragmentActivity
 import android.support.v4.view.PagerAdapter
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.github.veselinazatchepina.mygallery.R
+import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewModel
 import com.github.veselinazatchepina.mygallery.dialogs.DeletePhotoDialog
 import com.github.veselinazatchepina.mygallery.dialogs.SavePhotoDialog
 import com.squareup.picasso.Callback
@@ -28,6 +30,10 @@ class CurrentPhotoPageAdapter(private val context: FragmentActivity,
     companion object {
         private const val DIALOG_SAVE_CURRENT_PHOTO_TAG = "dialog_save_current_photo_tag"
         private const val DIALOG_DELETE_CURRENT_PHOTO_TAG = "dialog_delete_current_photo_tag"
+    }
+
+    private val photosViewModel by lazy {
+            ViewModelProviders.of(context).get(CurrentPhotoViewModel::class.java)
     }
 
     private val layoutInflater by lazy {
@@ -69,6 +75,12 @@ class CurrentPhotoPageAdapter(private val context: FragmentActivity,
 
     fun addAll(newUrls: List<String>) {
         (urls as ArrayList<String>).addAll(newUrls)
+        notifyDataSetChanged()
+    }
+
+    fun update(newUrls: List<String>) {
+        (urls as ArrayList<String>).clear()
+        urls.addAll(newUrls)
         notifyDataSetChanged()
     }
 

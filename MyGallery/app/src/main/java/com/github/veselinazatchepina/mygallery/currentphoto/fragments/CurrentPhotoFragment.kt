@@ -28,7 +28,7 @@ class CurrentPhotoFragment : Fragment() {
 
     private var rootView: View? = null
     private val currentPhotoViewModel by lazy {
-        ViewModelProviders.of(this).get(CurrentPhotoViewModel::class.java)
+        ViewModelProviders.of(activity!!).get(CurrentPhotoViewModel::class.java)
     }
     private val photoUrl by lazy {
         arguments?.getString(PHOTO_URL_KEY_BUNDLE) ?: ""
@@ -76,6 +76,13 @@ class CurrentPhotoFragment : Fragment() {
         pageNumberForDownload = currentPage
         isMyPhotos = currentPage == -1
         defineViewPager()
+        if (isMyPhotos) {
+            currentPhotoViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+            currentPhotoViewModel.liveMyPhotos.observe(this, Observer {
+                viewPagerPhotoAdapter = CurrentPhotoPageAdapter(activity!!, it?.map { it.path } ?: emptyList(), isMyPhotos)
+                viewPagerCurrentPhoto.adapter = viewPagerPhotoAdapter
+            })
+        }
         Log.d("ISMY", "MY $isMyPhotos")
     }
 
