@@ -12,10 +12,6 @@ abstract class AbstractAdapter<ITEM> constructor(
 
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         var viewHolder: Holder? = null
         val view = parent inflate layoutResId
@@ -47,6 +43,10 @@ abstract class AbstractAdapter<ITEM> constructor(
 
     protected open fun onLongItemClick(itemView: View, position: Int) {
 
+    }
+
+    override fun getItemCount(): Int {
+        return items.size
     }
 
     fun getAdapterItems() = items

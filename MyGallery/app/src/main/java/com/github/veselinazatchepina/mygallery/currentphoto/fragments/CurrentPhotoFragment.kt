@@ -11,7 +11,6 @@ import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
 import android.support.v4.view.ViewPager
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
@@ -40,6 +39,7 @@ class CurrentPhotoFragment : Fragment() {
         arguments?.getInt(CURRENT_PAGE_KEY_BUNDLE) ?: -1
     }
     private var pageNumberForDownload = 1
+    //Variable defines what type of photo should be download (Photo from remote or local storage)
     private var isMyPhotos = false
     private lateinit var viewPagerPhotoAdapter: CurrentPhotoPageAdapter
 
@@ -61,10 +61,6 @@ class CurrentPhotoFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_current_photo, container, false)
         setHasOptionsMenu(true)
@@ -73,17 +69,22 @@ class CurrentPhotoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pageNumberForDownload = currentPage
-        isMyPhotos = currentPage == -1
+        defineInputData()
         defineViewPager()
         if (isMyPhotos) {
-            currentPhotoViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
-            currentPhotoViewModel.liveMyPhotos.observe(this, Observer {
-                viewPagerPhotoAdapter = CurrentPhotoPageAdapter(activity!!, it?.map { it.path } ?: emptyList(), isMyPhotos)
-                viewPagerCurrentPhoto.adapter = viewPagerPhotoAdapter
-            })
+            observeMyPhotos()
         }
-        Log.d("ISMY", "MY $isMyPhotos")
+    }
+
+    private fun defineInputData() {
+        pageNumberForDownload = currentPage
+        isMyPhotos = currentPage == -1
+    }
+
+    private fun observeMyPhotos() {
+        currentPhotoViewModel.liveMyPhotos.observe(this, Observer {
+            createViewPagerAdapter(it?.map { it.path } ?: emptyList())
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -107,7 +108,6 @@ class CurrentPhotoFragment : Fragment() {
             shareIntent.type = "image/*"
             startActivity(Intent.createChooser(shareIntent, "Share Image"))
         }
-        File(currentBitmapUri?.path).delete()
     }
 
     private fun getLocalBitmapUri(imageView: ImageView): Uri? {
@@ -127,9 +127,17 @@ class CurrentPhotoFragment : Fragment() {
         return currentBitmapUri
     }
 
-    private fun getFile(currentBitmap: Bitmap?) = if (isMyPhotos) {File(viewPagerPhotoAdapter.getItem(viewPagerCurrentPhoto.currentItem))}
-    else {getFileWithBitmap(currentBitmap)}
+    private fun getFile(currentBitmap: Bitmap?) = if (isMyPhotos) {
+        File(viewPagerPhotoAdapter.getItem(viewPagerCurrentPhoto.currentItem))
+    } else {
+        getFileWithBitmap(currentBitmap)
+    }
 
+    /**
+     * We use this method if we share photo from remote storage
+     *
+     * @param currentBitmap bitmap from ImageView
+     */
     private fun getFileWithBitmap(currentBitmap: Bitmap?): File {
         val fileForBitmap = File(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                 "share_image_" + System.currentTimeMillis() + ".png")
@@ -159,10 +167,14 @@ class CurrentPhotoFragment : Fragment() {
     }
 
     private fun defineViewPager() {
-        viewPagerPhotoAdapter = CurrentPhotoPageAdapter(activity!!, urls, isMyPhotos)
-        viewPagerCurrentPhoto.adapter = viewPagerPhotoAdapter
+        createViewPagerAdapter(urls)
         viewPagerCurrentPhoto.currentItem = viewPagerPhotoAdapter.getCurrentItemPosition(photoUrl)
         defineViewPagerPageListener()
+    }
+
+    private fun createViewPagerAdapter(photoUrls: List<String>) {
+        viewPagerPhotoAdapter = CurrentPhotoPageAdapter(activity!!, photoUrls, isMyPhotos)
+        viewPagerCurrentPhoto.adapter = viewPagerPhotoAdapter
     }
 
     private fun defineViewPagerPageListener() {
@@ -175,6 +187,10 @@ class CurrentPhotoFragment : Fragment() {
 
             }
 
+            /**
+             * If we want to see photos from remote storage we have to download photos from other pages,
+             * not only what we got as "urls"
+             */
             override fun onPageSelected(position: Int) {
                 if (!isMyPhotos) {
                     if (position == urls.size - 1) {
@@ -182,9 +198,7 @@ class CurrentPhotoFragment : Fragment() {
                         currentPhotoViewModel.livePhotosInfo.observe(this@CurrentPhotoFragment, Observer {
                             viewPagerPhotoAdapter.addAll(it?.photos?.map { it.url } ?: emptyList())
                         })
-                        Log.d("POSITION", "URLS_SIZE")
                     }
-                    Log.d("POSITION", "$position")
                 }
             }
         })

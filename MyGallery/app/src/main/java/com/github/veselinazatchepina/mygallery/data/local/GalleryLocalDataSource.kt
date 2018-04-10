@@ -22,7 +22,7 @@ class GalleryLocalDataSource private constructor() : GalleryDataSource {
     }
 
     override fun getAllPhotos(page: Int): Flowable<RecentPhotos> {
-        TODO("not implemented")
+        TODO("not implemented because we don't need it")
     }
 
     override fun getMyPhotos(rootFile: File): List<MyPhoto> {

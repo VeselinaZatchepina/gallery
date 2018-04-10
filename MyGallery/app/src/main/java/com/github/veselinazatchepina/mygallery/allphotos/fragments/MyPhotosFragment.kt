@@ -2,12 +2,12 @@ package com.github.veselinazatchepina.mygallery.allphotos.fragments
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +15,7 @@ import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
 import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
-import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoActivityArgs
-import com.github.veselinazatchepina.mygallery.dialogs.DeletePhotoFromListDialog
+import com.github.veselinazatchepina.mygallery.dialogs.DialogDeletePhotoFromAllPhotosActivity
 import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.MyPhoto
 import com.squareup.picasso.Callback
@@ -31,10 +30,10 @@ import java.lang.Exception
 class MyPhotosFragment : Fragment() {
 
     private lateinit var myPhotosAdapter: AdapterImpl<MyPhoto>
-
     private val allPhotosViewModel by lazy {
         ViewModelProviders.of(activity!!).get(AllPhotosViewModel::class.java)
     }
+    var activityCallback: MyPhotosFragment.MyPhotosListener? = null
 
     companion object {
         private const val DELETE_PHOTO_DIALOG_TAG = "delete_photo_dialog_key"
@@ -44,8 +43,17 @@ class MyPhotosFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    interface MyPhotosListener {
+        fun launchCurrentPhotoActivity(path: String, allUrls: List<String>)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        try {
+            activityCallback = context as MyPhotosListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException(context?.toString() + " must implement MyPhotosListener")
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -56,11 +64,9 @@ class MyPhotosFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         createMyPhotosAdapter()
         defineSwipeRefreshLayout()
-        allPhotosViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+        loadMyPhotos()
         allPhotosViewModel.liveMyPhotos.observe(this, Observer {
-            Log.d("UPDATE", "update1")
             if (it != null) {
-                Log.d("UPDATE", "update")
                 myPhotosAdapter.update(it)
                 if (swipeRefreshLayout.isRefreshing) {
                     swipeRefreshLayout.isRefreshing = false
@@ -71,20 +77,24 @@ class MyPhotosFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        allPhotosViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+        loadMyPhotos()
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (this.isVisible) {
-            allPhotosViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+            loadMyPhotos()
         }
+    }
+
+    private fun loadMyPhotos() {
+        allPhotosViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
     }
 
     private fun defineSwipeRefreshLayout() {
         setColorsToSwipe()
         swipeRefreshLayout.setOnRefreshListener {
-            allPhotosViewModel.getMyPhotos(activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+            loadMyPhotos()
         }
     }
 
@@ -99,17 +109,22 @@ class MyPhotosFragment : Fragment() {
                 R.layout.recycler_view_image_item, {
             downloadPhoto(it.path, currentImage)
         }, {
-            CurrentPhotoActivityArgs(path, allPhotosViewModel.liveMyPhotos
-                    .value
-                    ?.map { it.path } as ArrayList<String>)
-                    .launch(activity!!)
+            activityCallback?.launchCurrentPhotoActivity(path, allPhotosViewModel.liveMyPhotos.value?.map { it.path }
+                    ?: emptyList<String>())
         }, {
-            DeletePhotoFromListDialog.newInstance(this.path).show(activity!!.supportFragmentManager, DELETE_PHOTO_DIALOG_TAG)
+            DialogDeletePhotoFromAllPhotosActivity.newInstance(this.path)
+                    .show(activity!!.supportFragmentManager, DELETE_PHOTO_DIALOG_TAG)
         })
         defineAdapterDataObserver()
         defineRecyclerView()
     }
 
+    /**
+     * Fun downloads photo by url to imageView
+     *
+     * @param url photo's url
+     * @param imageView view for photo
+     */
     private fun downloadPhoto(url: String, imageView: ImageView) {
         Picasso.get()
                 .load(File(url))
@@ -127,6 +142,9 @@ class MyPhotosFragment : Fragment() {
                 })
     }
 
+    /**
+     * Fun helps to observe adapter's data. If it has empty data we set empty view.
+     */
     private fun defineAdapterDataObserver() {
         emptyText.text = resources.getString(R.string.empty_view_text)
         myPhotosAdapter.observeData(emptyText)
@@ -137,6 +155,4 @@ class MyPhotosFragment : Fragment() {
         val layoutManager = GridLayoutManager(activity, activity!!.resources.getInteger(R.integer.grid_span_count))
         recyclerView.layoutManager = layoutManager
     }
-
-
 }

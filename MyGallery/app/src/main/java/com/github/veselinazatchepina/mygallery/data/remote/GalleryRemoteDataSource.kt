@@ -38,6 +38,6 @@ class GalleryRemoteDataSource private constructor() : GalleryDataSource {
     }
 
     override fun getMyPhotos(rootFile: File): List<MyPhoto> {
-        TODO("not implemented")
+        TODO("not implemented because we don't need it")
     }
 }

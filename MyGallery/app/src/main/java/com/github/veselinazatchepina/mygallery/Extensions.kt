@@ -31,10 +31,10 @@ fun String.setFirstVowelColor(context: Context): Spannable {
 }
 
 /**
- * Method returns index of first vowel in title (for english language)
+ * Method returns index of first vowel in title (for en and ru languages)
  *
  * @param text     current text
- * @return index of first vowel
+ * @return index of first vowel char
  */
 private fun getFirstVowelIndex(text: String): Int {
     var patternString = ""
@@ -45,6 +45,12 @@ private fun getFirstVowelIndex(text: String): Int {
     return getIndex(patternString, text)
 }
 
+/**
+ * Fun returns index of first vowel char
+ *
+ * @param patternString pattern for searching first vowel char
+ * @param text curent text
+ */
 private fun getIndex(patternString: String, text: String): Int {
     val p = Pattern.compile(patternString)
     val m = p.matcher(text)
@@ -60,7 +66,8 @@ infix fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
 }
 
 /**
- * Method helps to register adapter data observer for RecyclerView adapter
+ * Method helps to register adapter data observer for RecyclerView adapter.
+ * It checks data and if it is empty we set empty view.
  *
  * @param emptyView it is view which should be visible if adapter is empty
  */

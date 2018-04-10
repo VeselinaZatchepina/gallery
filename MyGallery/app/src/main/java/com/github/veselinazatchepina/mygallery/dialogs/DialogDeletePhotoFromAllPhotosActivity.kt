@@ -9,26 +9,26 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import com.github.veselinazatchepina.mygallery.R
-import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewModel
+import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
 import kotlinx.android.synthetic.main.dialog_photo.view.*
 
 
-class DeletePhotoDialog : DialogFragment() {
+class DialogDeletePhotoFromAllPhotosActivity : DialogFragment() {
 
     private val photoPathForDelete by lazy {
         arguments?.getString(PHOTO_PATH_DIALOG_BUNDLE) ?: ""
     }
     private val photosViewModel by lazy {
-        ViewModelProviders.of(activity!!).get(CurrentPhotoViewModel::class.java)
+        ViewModelProviders.of(activity!!).get(AllPhotosViewModel::class.java)
     }
 
     companion object {
         private const val PHOTO_PATH_DIALOG_BUNDLE = "photo_path_dialog_bundle"
 
-        fun newInstance(photoPath: String): DeletePhotoDialog {
+        fun newInstance(photoPath: String): DialogDeletePhotoFromAllPhotosActivity {
             val bundle = Bundle()
             bundle.putString(PHOTO_PATH_DIALOG_BUNDLE, photoPath)
-            val fragment = DeletePhotoDialog()
+            val fragment = DialogDeletePhotoFromAllPhotosActivity()
             fragment.arguments = bundle
             return fragment
         }

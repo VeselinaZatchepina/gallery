@@ -6,7 +6,7 @@ import com.github.veselinazatchepina.mygallery.ActivityArgs
 
 
 data class CurrentPhotoActivityArgs(val photoUrl: String,
-                                    val urls: ArrayList<String>,
+                                    val urls: ArrayList<String> = arrayListOf<String>(),
                                     val page: Int = -1) : ActivityArgs {
 
     companion object {

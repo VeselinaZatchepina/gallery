@@ -6,7 +6,11 @@ import android.support.v4.app.FragmentPagerAdapter
 import com.github.veselinazatchepina.mygallery.allphotos.fragments.AllPhotosFragment
 import com.github.veselinazatchepina.mygallery.allphotos.fragments.MyPhotosFragment
 
-
+/**
+ * PageAdapter for ViewPager in AllPhotosMainActivity
+ *
+ * @property tabTitles it is list of tab's titles
+ */
 class AllPhotosPageAdapter(fm: FragmentManager,
                            private val tabTitles: List<String>) : FragmentPagerAdapter(fm) {
 

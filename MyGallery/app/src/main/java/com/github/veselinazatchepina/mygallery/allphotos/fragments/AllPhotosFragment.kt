@@ -34,8 +34,9 @@ class AllPhotosFragment : Fragment() {
     private val allPhotosViewModel by lazy {
         ViewModelProviders.of(activity!!).get(AllPhotosViewModel::class.java)
     }
-    private lateinit var photosAdapter: AdapterImpl<Photo>
+    private lateinit var allPhotosAdapter: AdapterImpl<Photo>
     private lateinit var recyclerScrollListener: EndlessRecyclerViewScrollListener
+    //Page number for load from remote data source. It uses to launch CurrentPhotoActivity
     private var currentPageForDownload = 1
     var activityCallback: AllPhotosFragment.AllPhotosListener? = null
 
@@ -60,10 +61,6 @@ class AllPhotosFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.recycler_view, container, false)
         allPhotosViewModel.getAllPhotos()
@@ -77,14 +74,32 @@ class AllPhotosFragment : Fragment() {
         allPhotosViewModel.livePhotos.observe(this, Observer {
             if (it != null) {
                 if (swipeRefreshLayout.isRefreshing) {
-                    photosAdapter.update(it)
+                    allPhotosAdapter.update(it.filter { it.url.isNotEmpty() })
                     swipeRefreshLayout.isRefreshing = false
                 } else {
-                    photosAdapter.addAll(it)
+                    allPhotosAdapter.addAll(it.filter { it.url.isNotEmpty() })
                 }
                 Log.d("PHOTOS", "${it.size}")
             }
         })
+    }
+
+    /**
+     * Fun creates adapter for RecyclerView
+     */
+    private fun createPhotosAdapter() {
+        allPhotosAdapter = AdapterImpl(arrayListOf<Photo>(),
+                R.layout.recycler_view_image_item, {
+            downloadPhoto(it.url, currentImage)
+        }, {
+            activityCallback?.launchCurrentPhotoActivity(this.url,
+                    allPhotosAdapter.getAdapterItems().map { it.url } as ArrayList<String>,
+                    currentPageForDownload)
+        }, {
+            SavePhotoDialog.newInstance(url).show(activity!!.supportFragmentManager, SAVE_PHOTO_DIALOG_TAG)
+        })
+        defineAdapterDataObserver()
+        defineRecyclerView()
     }
 
     private fun defineSwipeRefreshLayout() {
@@ -101,35 +116,25 @@ class AllPhotosFragment : Fragment() {
                 ContextCompat.getColor(activity!!, R.color.colorAccent))
     }
 
-    private fun createPhotosAdapter() {
-        photosAdapter = AdapterImpl(arrayListOf<Photo>(),
-                R.layout.recycler_view_image_item, {
-            if (it.url.isNotEmpty()) {
-                downloadPhoto(it.url, currentImage)
-            }
-        }, {
-            activityCallback?.launchCurrentPhotoActivity(this.url, photosAdapter.getAdapterItems()
-                    .map { it.url }
-                    .filter { it.isNotEmpty() } as ArrayList<String>, currentPageForDownload)
-        }, {
-            SavePhotoDialog.newInstance(url).show(activity!!.supportFragmentManager, SAVE_PHOTO_DIALOG_TAG)
-        })
-        defineAdapterDataObserver()
-        defineRecyclerView()
-    }
 
+    /**
+     * Fun helps to observe adapter's data. If it has empty data we set empty view.
+     */
     private fun defineAdapterDataObserver() {
         emptyText.text = resources.getString(R.string.error_view_text)
-        photosAdapter.observeData(emptyText)
+        allPhotosAdapter.observeData(emptyText)
     }
 
     private fun defineRecyclerView() {
-        recyclerView.adapter = photosAdapter
+        recyclerView.adapter = allPhotosAdapter
         val layoutManager = GridLayoutManager(activity, activity!!.resources.getInteger(R.integer.grid_span_count))
         recyclerView.layoutManager = layoutManager
         defineRecyclerViewScrollListener(layoutManager)
     }
 
+    /**
+     * Fun defines ScrollListener for loading new data when scrolling
+     */
     private fun defineRecyclerViewScrollListener(gridlayoutManager: GridLayoutManager) {
         recyclerScrollListener = object : EndlessRecyclerViewScrollListener(gridlayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
@@ -140,17 +145,24 @@ class AllPhotosFragment : Fragment() {
         recyclerView.addOnScrollListener(recyclerScrollListener)
     }
 
+    /**
+     * Fun downloads photo by url to imageView
+     *
+     * @param url photo's url
+     * @param imageView view for photo
+     */
     private fun downloadPhoto(url: String, imageView: ImageView) {
         Picasso.get()
                 .load(url)
                 .placeholder(R.drawable.empty_image)
-                .error(R.drawable.empty_image)
                 .into(imageView, object : Callback {
                     override fun onSuccess() {
                         emptyText?.visibility = View.GONE
                     }
 
                     override fun onError(e: Exception?) {
+                        //Set error text
+                        emptyText?.text = resources.getString(R.string.error_view_text)
                         emptyText?.visibility = View.VISIBLE
                     }
                 })

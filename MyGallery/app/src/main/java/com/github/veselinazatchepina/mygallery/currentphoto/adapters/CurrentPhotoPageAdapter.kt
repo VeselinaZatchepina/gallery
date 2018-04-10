@@ -1,22 +1,18 @@
 package com.github.veselinazatchepina.mygallery.currentphoto.adapters
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.support.v4.app.FragmentActivity
 import android.support.v4.view.PagerAdapter
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.github.veselinazatchepina.mygallery.R
-import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewModel
-import com.github.veselinazatchepina.mygallery.dialogs.DeletePhotoDialog
+import com.github.veselinazatchepina.mygallery.dialogs.DialogDeletePhotoFromCurrentPhotoActivity
 import com.github.veselinazatchepina.mygallery.dialogs.SavePhotoDialog
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.RequestCreator
 import kotlinx.android.synthetic.main.current_photo_item.view.*
 import kotlinx.android.synthetic.main.error_current_photo.view.*
 import java.io.File
@@ -32,10 +28,6 @@ class CurrentPhotoPageAdapter(private val context: FragmentActivity,
         private const val DIALOG_DELETE_CURRENT_PHOTO_TAG = "dialog_delete_current_photo_tag"
     }
 
-    private val photosViewModel by lazy {
-            ViewModelProviders.of(context).get(CurrentPhotoViewModel::class.java)
-    }
-
     private val layoutInflater by lazy {
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     }
@@ -48,9 +40,14 @@ class CurrentPhotoPageAdapter(private val context: FragmentActivity,
         val itemView = layoutInflater.inflate(R.layout.current_photo_item, container, false)
         downloadPhoto(urls[position], itemView.currentPhoto, itemView.errorCurrentPhotoText)
         container.addView(itemView)
+        defineImageViewLongClickListener(itemView, position)
+        return itemView
+    }
+
+    private fun defineImageViewLongClickListener(itemView: View, position: Int) {
         itemView.currentPhoto.setOnLongClickListener {
             if (isMyPhotos) {
-                DeletePhotoDialog.newInstance(urls[position])
+                DialogDeletePhotoFromCurrentPhotoActivity.newInstance(urls[position])
                         .show(context.supportFragmentManager, DIALOG_DELETE_CURRENT_PHOTO_TAG)
                 false
             } else {
@@ -59,7 +56,6 @@ class CurrentPhotoPageAdapter(private val context: FragmentActivity,
                 false
             }
         }
-        return itemView
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, currentObject: Any) {
@@ -78,25 +74,14 @@ class CurrentPhotoPageAdapter(private val context: FragmentActivity,
         notifyDataSetChanged()
     }
 
-    fun update(newUrls: List<String>) {
-        (urls as ArrayList<String>).clear()
-        urls.addAll(newUrls)
-        notifyDataSetChanged()
-    }
-
     private fun downloadPhoto(url: String, imageView: ImageView, errorView: View?) {
-        val requestCreatorPicasso: RequestCreator
         if (isMyPhotos) {
-            requestCreatorPicasso = Picasso.get()
+            Picasso.get()
                     .load(File(url))
-            Log.d("MY", "MY")
         } else {
-            requestCreatorPicasso = Picasso.get()
+            Picasso.get()
                     .load(url)
-            Log.d("ALL", "ALL")
-        }
-        requestCreatorPicasso
-                .placeholder(R.drawable.empty_image)
+        }.placeholder(R.drawable.empty_image)
                 .into(imageView, object : Callback {
                     override fun onSuccess() {
                         errorView?.visibility = View.GONE
@@ -107,6 +92,4 @@ class CurrentPhotoPageAdapter(private val context: FragmentActivity,
                     }
                 })
     }
-
-
 }

@@ -2,7 +2,9 @@ package com.github.veselinazatchepina.mygallery.poko
 
 import com.google.gson.annotations.SerializedName
 
-
+/**
+ * Photo from remote storage
+ */
 data class Photo(var id: String = "",
                  var title: String = "",
                  @SerializedName("url_s")

@@ -5,7 +5,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 
 
 /**
- * This is a common approach in determining the ScrollListener's RecyclerView
+ * This is a common approach in determining the ScrollListener's RecyclerView for loading new data
  *
  * @See <a href="https://github.com/codepath/android_guides/wiki/Endless-Scrolling-with-AdapterViews-and-RecyclerView">
  *     recycler_view_guide</a>
@@ -22,19 +22,19 @@ abstract class EndlessRecyclerViewScrollListener : RecyclerView.OnScrollListener
     private var loading = true
     // Sets the starting page index
     private val startingPageIndex = 0
-    private var mLayoutManager: RecyclerView.LayoutManager
+    private var layoutManager: RecyclerView.LayoutManager
 
     constructor(layoutManager: LinearLayoutManager) {
-        this.mLayoutManager = layoutManager
+        this.layoutManager = layoutManager
     }
 
     constructor(layoutManager: GridLayoutManager) {
-        this.mLayoutManager = layoutManager
+        this.layoutManager = layoutManager
         visibleThreshold *= layoutManager.spanCount
     }
 
     constructor(layoutManager: StaggeredGridLayoutManager) {
-        this.mLayoutManager = layoutManager
+        this.layoutManager = layoutManager
         visibleThreshold *= layoutManager.spanCount
     }
 
@@ -55,16 +55,16 @@ abstract class EndlessRecyclerViewScrollListener : RecyclerView.OnScrollListener
     // but first we check if we are waiting for the previous load to finish.
     override fun onScrolled(view: RecyclerView?, dx: Int, dy: Int) {
         var lastVisibleItemPosition = 0
-        val totalItemCount = mLayoutManager.itemCount
+        val totalItemCount = layoutManager.itemCount
 
-        if (mLayoutManager is StaggeredGridLayoutManager) {
-            val lastVisibleItemPositions = (mLayoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
+        if (layoutManager is StaggeredGridLayoutManager) {
+            val lastVisibleItemPositions = (layoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
             // get maximum element within the list
             lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
-        } else if (mLayoutManager is GridLayoutManager) {
-            lastVisibleItemPosition = (mLayoutManager as GridLayoutManager).findLastVisibleItemPosition()
-        } else if (mLayoutManager is LinearLayoutManager) {
-            lastVisibleItemPosition = (mLayoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+        } else if (layoutManager is GridLayoutManager) {
+            lastVisibleItemPosition = (layoutManager as GridLayoutManager).findLastVisibleItemPosition()
+        } else if (layoutManager is LinearLayoutManager) {
+            lastVisibleItemPosition = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
         }
 
         // If the total item count is zero and the previous isn't, assume the
@@ -106,5 +106,4 @@ abstract class EndlessRecyclerViewScrollListener : RecyclerView.OnScrollListener
 
     // Defines the process for actually loading more data based on page
     abstract fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?)
-
 }
