@@ -17,7 +17,7 @@ import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
 import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
-import com.github.veselinazatchepina.mygallery.allphotos.dialogs.SavePhotoDialog
+import com.github.veselinazatchepina.mygallery.dialogs.SavePhotoDialog
 import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.Photo
 import com.squareup.picasso.Callback
@@ -147,11 +147,11 @@ class AllPhotosFragment : Fragment() {
                 .error(R.drawable.empty_image)
                 .into(imageView, object : Callback {
                     override fun onSuccess() {
-                        emptyText.visibility = View.GONE
+                        emptyText?.visibility = View.GONE
                     }
 
                     override fun onError(e: Exception?) {
-                        emptyText.visibility = View.VISIBLE
+                        emptyText?.visibility = View.VISIBLE
                     }
                 })
     }

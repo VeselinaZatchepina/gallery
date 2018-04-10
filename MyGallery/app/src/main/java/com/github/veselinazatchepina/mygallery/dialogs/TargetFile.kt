@@ -1,4 +1,4 @@
-package com.github.veselinazatchepina.mygallery.allphotos.dialogs
+package com.github.veselinazatchepina.mygallery.dialogs
 
 import android.content.Context
 import android.graphics.Bitmap

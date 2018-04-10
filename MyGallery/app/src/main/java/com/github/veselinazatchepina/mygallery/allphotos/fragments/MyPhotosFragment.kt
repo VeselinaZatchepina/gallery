@@ -15,8 +15,8 @@ import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
 import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
-import com.github.veselinazatchepina.mygallery.allphotos.dialogs.DeletePhotoDialog
 import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoActivityArgs
+import com.github.veselinazatchepina.mygallery.dialogs.DeletePhotoDialog
 import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.MyPhoto
 import com.squareup.picasso.Callback
@@ -112,12 +112,12 @@ class MyPhotosFragment : Fragment() {
                 .error(R.drawable.empty_image)
                 .into(imageView, object : Callback {
                     override fun onSuccess() {
-                        emptyText.visibility = View.GONE
+                        emptyText?.visibility = View.GONE
                     }
 
                     override fun onError(e: Exception?) {
-                        emptyText.text = getString(R.string.error_view_text)
-                        emptyText.visibility = View.VISIBLE
+                        emptyText?.text = getString(R.string.error_view_text)
+                        emptyText?.visibility = View.VISIBLE
                     }
                 })
     }

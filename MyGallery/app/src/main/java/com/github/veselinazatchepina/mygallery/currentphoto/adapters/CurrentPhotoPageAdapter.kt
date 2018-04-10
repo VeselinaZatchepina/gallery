@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.github.veselinazatchepina.mygallery.R
-import com.github.veselinazatchepina.mygallery.allphotos.dialogs.DeletePhotoDialog
-import com.github.veselinazatchepina.mygallery.allphotos.dialogs.SavePhotoDialog
+import com.github.veselinazatchepina.mygallery.dialogs.DeletePhotoDialog
+import com.github.veselinazatchepina.mygallery.dialogs.SavePhotoDialog
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.RequestCreator
@@ -72,7 +72,7 @@ class CurrentPhotoPageAdapter(private val context: FragmentActivity,
         notifyDataSetChanged()
     }
 
-    private fun downloadPhoto(url: String, imageView: ImageView, errorView: View) {
+    private fun downloadPhoto(url: String, imageView: ImageView, errorView: View?) {
         val requestCreatorPicasso: RequestCreator
         if (isMyPhotos) {
             requestCreatorPicasso = Picasso.get()
@@ -87,12 +87,14 @@ class CurrentPhotoPageAdapter(private val context: FragmentActivity,
                 .placeholder(R.drawable.empty_image)
                 .into(imageView, object : Callback {
                     override fun onSuccess() {
-                        errorView.visibility = View.GONE
+                        errorView?.visibility = View.GONE
                     }
 
                     override fun onError(e: Exception?) {
-                        errorView.visibility = View.VISIBLE
+                        errorView?.visibility = View.VISIBLE
                     }
                 })
     }
+
+
 }

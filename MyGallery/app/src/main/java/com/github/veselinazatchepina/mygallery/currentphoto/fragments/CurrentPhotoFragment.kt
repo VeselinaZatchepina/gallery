@@ -4,12 +4,10 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore.Images.Media.getBitmap
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
 import android.support.v4.view.ViewPager
@@ -17,12 +15,10 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import com.github.veselinazatchepina.mygallery.R
-import com.github.veselinazatchepina.mygallery.allphotos.dialogs.SavePhotoDialog
 import com.github.veselinazatchepina.mygallery.currentphoto.CurrentPhotoViewModel
 import com.github.veselinazatchepina.mygallery.currentphoto.adapters.CurrentPhotoPageAdapter
 import kotlinx.android.synthetic.main.current_photo_item.*
 import kotlinx.android.synthetic.main.fragment_current_photo.*
-import org.jetbrains.anko.support.v4.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

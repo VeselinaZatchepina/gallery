@@ -1,29 +1,34 @@
-package com.github.veselinazatchepina.mygallery.allphotos.dialogs
+package com.github.veselinazatchepina.mygallery.dialogs
 
 import android.app.Dialog
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.os.Environment
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import com.github.veselinazatchepina.mygallery.R
-import com.squareup.picasso.Picasso
+import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
 import kotlinx.android.synthetic.main.dialog_photo.view.*
 
 
-class SavePhotoDialog : DialogFragment() {
+class DeletePhotoDialog : DialogFragment() {
 
-    private val photoUrlForSave by lazy {
-        arguments?.getString(PHOTO_URL_DIALOG_BUNDLE) ?: ""
+    private val photoPathForDelete by lazy {
+        arguments?.getString(PHOTO_PATH_DIALOG_BUNDLE) ?: ""
+    }
+    private val allPhotosViewModel by lazy {
+        ViewModelProviders.of(activity!!).get(AllPhotosViewModel::class.java)
     }
 
     companion object {
-        private const val PHOTO_URL_DIALOG_BUNDLE = "photo_url_dialog_bundle"
+        private const val PHOTO_PATH_DIALOG_BUNDLE = "photo_path_dialog_bundle"
 
-        fun newInstance(photoUrl: String): SavePhotoDialog {
+        fun newInstance(photoPath: String): DeletePhotoDialog {
             val bundle = Bundle()
-            bundle.putString(PHOTO_URL_DIALOG_BUNDLE, photoUrl)
-            val fragment = SavePhotoDialog()
+            bundle.putString(PHOTO_PATH_DIALOG_BUNDLE, photoPath)
+            val fragment = DeletePhotoDialog()
             fragment.arguments = bundle
             return fragment
         }
@@ -41,15 +46,13 @@ class SavePhotoDialog : DialogFragment() {
 
     private fun defineOkDialogButton(dialogView: View) {
         dialogView.okButton.setOnClickListener {
-            savePhoto()
+            deletePhoto()
             dismiss()
         }
     }
 
-    private fun savePhoto() {
-        Picasso.get()
-                .load(photoUrlForSave)
-                .into(TargetFile(activity!!,"${System.currentTimeMillis()}.png"))
+    private fun deletePhoto() {
+        allPhotosViewModel.deleteMyPhoto(photoPathForDelete, activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
     }
 
     private fun defineCancelDialogButton(dialogView: View) {
@@ -61,7 +64,7 @@ class SavePhotoDialog : DialogFragment() {
     private fun defineAlterDialogBuilder(dialogView: View): AlertDialog.Builder {
         return AlertDialog.Builder(activity!!).apply {
             setView(dialogView)
-            setTitle(getString(R.string.dialog_save_photo_title))
+            setTitle(getString(R.string.dialog_delete_photo_title))
             setCancelable(false)
         }
     }
