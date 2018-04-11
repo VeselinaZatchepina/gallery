@@ -11,7 +11,7 @@ import com.github.veselinazatchepina.mygallery.enums.PhotoType
 import com.github.veselinazatchepina.mygallery.setFirstVowelColor
 import kotlinx.android.synthetic.main.activity_all_photos_main.*
 
-class AllPhotosMainActivity : AppCompatActivity(), AllPhotosFragment.AllPhotosListener,
+open class AllPhotosMainActivity : AppCompatActivity(), AllPhotosFragment.AllPhotosListener,
         MyPhotosFragment.MyPhotosListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {

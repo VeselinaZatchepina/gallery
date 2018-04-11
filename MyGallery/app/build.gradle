@@ -9,6 +9,7 @@ android {
     defaultConfig {
         applicationId "com.github.veselinazatchepina.mygallery"
         minSdkVersion 19
+        testInstrumentationRunner 'com.github.tmurakami.dexopener.DexOpenerAndroidJUnitRunner'
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -30,9 +31,20 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:27.1.0'
     compile 'com.android.support:customtabs:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    //Tests
+    testImplementation 'org.mockito:mockito-android:2.7.22'
+    testCompile "org.robolectric:robolectric:3.7"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.1'
+    androidTestCompile 'com.android.support.test:rules:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    testCompile 'org.mockito:mockito-core:2.8.9'
+    testCompile ("com.nhaarman:mockito-kotlin:1.4.0", {
+        exclude group: 'org.jetbrains.kotlin'
+        exclude group: 'org.mockito'
+    })
 
     //LiveData and ViewModel
     implementation "android.arch.lifecycle:extensions:1.1.1"

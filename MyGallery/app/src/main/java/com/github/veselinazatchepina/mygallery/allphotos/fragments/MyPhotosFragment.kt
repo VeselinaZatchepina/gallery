@@ -16,6 +16,7 @@ import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.abstracts.AdapterImpl
 import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosViewModel
 import com.github.veselinazatchepina.mygallery.dialogs.DialogDeletePhotoFromAllPhotosActivity
+import com.github.veselinazatchepina.mygallery.enums.PhotoType
 import com.github.veselinazatchepina.mygallery.observeData
 import com.github.veselinazatchepina.mygallery.poko.MyPhoto
 import com.squareup.picasso.Callback
@@ -151,6 +152,7 @@ class MyPhotosFragment : Fragment() {
     }
 
     private fun defineRecyclerView() {
+        recyclerView.contentDescription = activity?.resources?.getString(PhotoType.MY_PHOTOS.resource)
         recyclerView.adapter = myPhotosAdapter
         val layoutManager = GridLayoutManager(activity, activity!!.resources.getInteger(R.integer.grid_span_count))
         recyclerView.layoutManager = layoutManager
