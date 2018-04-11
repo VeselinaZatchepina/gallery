@@ -15,6 +15,7 @@ class AllPhotosMainActivity : AppCompatActivity(), AllPhotosFragment.AllPhotosLi
         MyPhotosFragment.MyPhotosListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_photos_main)
         defineTabLayout()

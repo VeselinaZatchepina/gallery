@@ -13,4 +13,9 @@
         <item name="android:windowBackground">@color/gradient_end</item>
     </style>
 
+    <!-- Launch style -->
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
 </resources>
