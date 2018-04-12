@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,9 +36,9 @@ class AllPhotosFragment : Fragment() {
     }
     private lateinit var allPhotosAdapter: AdapterImpl<Photo>
     private lateinit var recyclerScrollListener: EndlessRecyclerViewScrollListener
-    //Page number for load from remote data source. It uses to launch CurrentPhotoActivity
+    //Page number for load from remote data source. It uses to launch CurrentPhotoActivity.
     private var currentPageForDownload = 1
-    var activityCallback: AllPhotosFragment.AllPhotosListener? = null
+    private var activityCallback: AllPhotosFragment.AllPhotosListener? = null
 
     companion object {
         private const val SAVE_PHOTO_DIALOG_TAG = "save_photo_dialog_key"
@@ -74,13 +73,14 @@ class AllPhotosFragment : Fragment() {
         defineSwipeRefreshLayout()
         allPhotosViewModel.livePhotos.observe(this, Observer {
             if (it != null) {
+                //If we want to load photos again by swipe
                 if (swipeRefreshLayout.isRefreshing) {
                     allPhotosAdapter.update(it.filter { it.url.isNotEmpty() })
                     swipeRefreshLayout.isRefreshing = false
                 } else {
+                    //If we scroll RecyclerView
                     allPhotosAdapter.addAll(it.filter { it.url.isNotEmpty() })
                 }
-                Log.d("PHOTOS", "${it.size}")
             }
         })
     }

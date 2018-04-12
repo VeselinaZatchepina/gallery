@@ -34,7 +34,7 @@ class MyPhotosFragment : Fragment() {
     private val allPhotosViewModel by lazy {
         ViewModelProviders.of(activity!!).get(AllPhotosViewModel::class.java)
     }
-    var activityCallback: MyPhotosFragment.MyPhotosListener? = null
+    private var activityCallback: MyPhotosFragment.MyPhotosListener? = null
 
     companion object {
         private const val DELETE_PHOTO_DIALOG_TAG = "delete_photo_dialog_key"

@@ -9,7 +9,7 @@ import com.github.veselinazatchepina.mygallery.allphotos.fragments.MyPhotosFragm
 /**
  * PageAdapter for ViewPager in AllPhotosMainActivity
  *
- * @property tabTitles it is list of tab's titles
+ * @property tabTitles it is list of tab's title
  */
 class AllPhotosPageAdapter(fm: FragmentManager,
                            private val tabTitles: List<String>) : FragmentPagerAdapter(fm) {

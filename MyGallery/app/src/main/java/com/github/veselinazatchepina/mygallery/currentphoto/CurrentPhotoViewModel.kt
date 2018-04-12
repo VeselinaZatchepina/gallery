@@ -40,7 +40,7 @@ class CurrentPhotoViewModel : ViewModel() {
                 }))
     }
 
-    fun getMyPhotos(rootFile: File) {
+    private fun getMyPhotos(rootFile: File) {
         liveMyPhotos.value = galleryDataSource.getMyPhotos(rootFile)
     }
 

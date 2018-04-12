@@ -12,7 +12,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.Exception
 
-
+/**
+ * It used for Picasso in SavePhotoDialog
+ */
 class TargetFile(private val context: Context,
                  private val imageName: String) : Target {
 

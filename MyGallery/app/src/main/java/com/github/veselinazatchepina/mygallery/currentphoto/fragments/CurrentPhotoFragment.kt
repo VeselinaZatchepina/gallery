@@ -78,6 +78,7 @@ class CurrentPhotoFragment : Fragment() {
 
     private fun defineInputData() {
         pageNumberForDownload = currentPage
+        //If we don't put in bundle page number then we load photo from local storage
         isMyPhotos = currentPage == -1
     }
 

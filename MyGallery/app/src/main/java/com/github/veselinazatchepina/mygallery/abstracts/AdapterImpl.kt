@@ -3,6 +3,9 @@ package com.github.veselinazatchepina.mygallery.abstracts
 import android.view.View
 
 
+/**
+ * Implementation of abstract adapter is used to simplify.
+ */
 class AdapterImpl<ITEM>(items: List<ITEM>,
                         layoutResId: Int,
                         private val bindHolder: View.(ITEM) -> Unit

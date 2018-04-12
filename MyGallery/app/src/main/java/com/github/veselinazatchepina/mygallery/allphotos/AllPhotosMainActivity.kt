@@ -55,6 +55,12 @@ open class AllPhotosMainActivity : AppCompatActivity(), AllPhotosFragment.AllPho
         CurrentPhotoActivityArgs(url, allUrls as ArrayList<String>, currentPage).launch(this)
     }
 
+    /**
+     * Callback from MyPhotosFragment. It launches activity to show full my photo.
+     *
+     * @param url url for current photo
+     * @param allUrls urls for my photos from local storage
+     */
     override fun launchCurrentPhotoActivity(path: String, allUrls: List<String>) {
         CurrentPhotoActivityArgs(path, allUrls as ArrayList<String>).launch(this)
     }

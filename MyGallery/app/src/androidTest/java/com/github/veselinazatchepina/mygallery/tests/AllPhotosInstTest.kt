@@ -106,6 +106,7 @@ class AllPhotosInstTest {
 
     @After
     fun finish() {
+        //Delete test photo
         val imageFilter = FilenameFilter { _, name ->
             name.endsWith("android_test.png")
         }
