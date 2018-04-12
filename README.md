@@ -17,3 +17,5 @@
   7. Picasso
   8. Для тестирования использовались: JUnit4, Robolectric, Espresso
   <h1></h1>
+
+<img src="https://github.com/VeselinaZatchepina/gallery/blob/master/Screenshots/ic_launcher_round.png" width="100px" hspace="15"/>
