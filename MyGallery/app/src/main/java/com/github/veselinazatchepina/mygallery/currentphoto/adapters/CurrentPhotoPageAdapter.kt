@@ -32,7 +32,12 @@ class CurrentPhotoPageAdapter(private val context: FragmentActivity,
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     }
 
-    override fun getCount() = urls.size
+    override fun getCount(): Int {
+        if (urls.isEmpty()) {
+            context.finish()
+        }
+        return urls.size
+    }
 
     override fun isViewFromObject(view: View, currentObject: Any) = view == currentObject as LinearLayout
 
