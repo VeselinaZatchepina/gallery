@@ -21,6 +21,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -32,7 +37,7 @@ dependencies {
     compile 'com.android.support:customtabs:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     //Tests
-    testImplementation 'org.mockito:mockito-android:2.7.22'
+    testImplementation 'org.mockito:mockito-android:2.8.9'
     testCompile "org.robolectric:robolectric:3.7"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
@@ -40,7 +45,7 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.1'
     androidTestCompile 'com.android.support.test:rules:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    testCompile 'org.mockito:mockito-core:2.8.9'
+    testCompile 'org.mockito:mockito-core:2.15.0'
     testCompile ("com.nhaarman:mockito-kotlin:1.4.0", {
         exclude group: 'org.jetbrains.kotlin'
         exclude group: 'org.mockito'

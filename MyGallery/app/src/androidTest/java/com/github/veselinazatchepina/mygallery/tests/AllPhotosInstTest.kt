@@ -19,6 +19,7 @@ import android.support.test.runner.AndroidJUnit4
 import android.support.v7.widget.RecyclerView
 import com.github.veselinazatchepina.mygallery.R
 import com.github.veselinazatchepina.mygallery.allphotos.AllPhotosMainActivity
+import com.github.veselinazatchepina.mygallery.data.local.GalleryLocalDataSource
 import com.github.veselinazatchepina.mygallery.enums.PhotoType
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.allOf
