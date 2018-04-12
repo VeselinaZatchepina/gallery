@@ -7,6 +7,7 @@
 <h1></h1>
 Используемые технологии, библиотеки:
 <p></p>
+
   1. Используемый архитектурный паттерн - MVVM
   2. RxJava2
   3. ViewModel from new Google Android Architecture Components
