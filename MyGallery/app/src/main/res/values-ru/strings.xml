@@ -8,7 +8,7 @@
     <string name="tab_title_my_photos">Мои фото</string>
 
     <!-- empty view -->
-    <string name="empty_view_text">Здесь пусто.\n Выберите изображения из предыдущей секции</string>
+    <string name="empty_view_text">Здесь ничего нет.\n Выберите изображения из предыдущей секции</string>
     <string name="error_current_photo_text">Упс… что-то пошло не так</string>
 
     <!-- error_view -->

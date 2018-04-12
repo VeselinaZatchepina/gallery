@@ -76,8 +76,8 @@ class MyPhotosFragment : Fragment() {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         loadMyPhotos()
     }
 
