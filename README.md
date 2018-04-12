@@ -4,6 +4,8 @@
 
 <img src="https://github.com/VeselinaZatchepina/gallery/blob/master/Screenshots/all_photos.png" width="250px" hspace="15"/><img src="https://github.com/VeselinaZatchepina/gallery/blob/master/Screenshots/my_photos.png" width="250px" hspace="15"/><img src="https://github.com/VeselinaZatchepina/gallery/blob/master/Screenshots/current_photo.png" width="250px" hspace="15"/>  
 
+Поддерживаемые языки: русский, английский
+
 <h1></h1>
 Используемые технологии, библиотеки:
 <p></p>
